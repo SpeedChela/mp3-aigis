@@ -1,0 +1,23 @@
+{
+  "appId": "org.aigis.mp3player",
+  "appName": "MP3-Aigis",
+  "webDir": "../../web",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#090d16"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#090d16",
+      "showSpinner": false
+    }
+  }
+}

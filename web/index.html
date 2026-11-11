@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MP3-Aigis — Liquid Glass YT Music &amp; Offline Audio Workstation</title>
+  <meta name="description" content="Reproductor híbrido YT Music + Spotify con estética Liquid Glass, 7 temas icónicos, extracción dinámica de color de portada, ecualizador DSP de 10 bandas y descargas resilientes." />
+  <link rel="stylesheet" href="css/base-liquid-glass.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+</head>
+<body data-theme="aigis" data-layout="hybrid" data-dynamic-color="true" data-eco="false" data-orgia="false">
+
+  <!-- Dynamic Cover Color Ambient Backdrop & Theme Pattern Overlay -->
+  <div id="ambient-backdrop" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+  <div id="theme-pattern-overlay" aria-hidden="true"></div>
+
+  <!-- Main Application Grid Shell -->
+  <div id="app-shell">
+
+    <!-- ====================================================================
+         LEFT SIDEBAR: BRANDING, PRIMARY NAVIGATION & OFFLINE PLAYLISTS
+         ==================================================================== -->
+    <aside id="left-sidebar" class="liquid-glass" aria-label="Navegación principal y biblioteca">
+      <div class="brand-header">
+        <div class="brand-identity">
+          <div class="brand-emblem" id="brand-emblem-icon" title="Unidad MP3-Aigis">A</div>
+          <div class="brand-titles">
+            <span class="brand-name">MP3-AIGIS</span>
+            <span class="brand-sub" id="brand-hud-subtitle">S.E.E.S. AUDIO OS</span>
+          </div>
+        </div>
+        <button type="button" class="icon-btn" id="btn-toggle-sidebar" title="Contraer/Expandir barra lateral" aria-label="Alternar barra lateral">
+          &#9776;
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Vistas del reproductor">
+        <button type="button" class="nav-item active" data-view="home" id="nav-btn-home">
+          <span class="nav-icon">&#10024;</span>
+          <span class="nav-label">Inicio Algoritmo YTM</span>
+        </button>
+        <button type="button" class="nav-item" data-view="stage" id="nav-btn-stage">
+          <span class="nav-icon">&#127911;</span>
+          <span class="nav-label">Escenario Dual A/V</span>
+          <span class="nav-badge" id="nav-badge-mode">CANCIÓN</span>
+        </button>
+        <button type="button" class="nav-item" data-view="downloads" id="nav-btn-downloads">
+          <span class="nav-icon">&#11015;</span>
+          <span class="nav-label">Descargas Offline</span>
+          <span class="nav-badge" id="nav-badge-downloads">3</span>
+        </button>
+        <button type="button" class="nav-item" data-view="equalizer" id="nav-btn-equalizer">
+          <span class="nav-icon">&#127898;</span>
+          <span class="nav-label">Ecualizador &amp; DSP</span>
+          <span class="nav-badge">10-BAND</span>
+        </button>
+        <button type="button" class="nav-item" data-view="customizer" id="nav-btn-customizer">
+          <span class="nav-icon">&#127912;</span>
+          <span class="nav-label">Temas &amp; Layouts</span>
+          <span class="nav-badge">7 SKINS</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-playlists-header">
+        <span>Playlists &amp; Sync Offline</span>
+        <button type="button" class="icon-btn" id="btn-create-playlist" title="Crear nueva Playlist" aria-label="Crear nueva Playlist">+</button>
+      </div>
+
+      <div class="playlist-scroll-list" id="playlist-list">
+        <div class="playlist-item active" data-playlist-id="pl-tartarus">
+          <div class="playlist-cover-mini">&#128737;</div>
+          <div class="playlist-info">
+            <div class="playlist-title">Orgia Mode &amp; P3 Reload Mix</div>
+            <div class="playlist-meta">Sincronizada • 18 pistas • Opus 160k</div>
+          </div>
+          <button type="button" class="pin-offline-btn pinned" data-pin-playlist="pl-tartarus" title="Anclada para reproducción Offline sin cortes">&#10003;</button>
+        </div>
+
+        <div class="playlist-item" data-playlist-id="pl-vocaloid">
+          <div class="playlist-cover-mini">&#127908;</div>
+          <div class="playlist-info">
+            <div class="playlist-title">CV01 Miku Cyber Matrix</div>
+            <div class="playlist-meta">Sincronizada • 24 pistas • Opus 160k</div>
+          </div>
+          <button type="button" class="pin-offline-btn pinned" data-pin-playlist="pl-vocaloid" title="Anclada para reproducción Offline">&#10003;</button>
+        </div>
+
+        <div class="playlist-item" data-playlist-id="pl-tachyon">
+          <div class="playlist-cover-mini">&#9883;</div>
+          <div class="playlist-info">
+            <div class="playlist-title">Agnes Tachyon Speed Lab</div>
+            <div class="playlist-meta">Algoritmo YTM • 15 pistas</div>
+          </div>
+          <button type="button" class="pin-offline-btn" data-pin-playlist="pl-tachyon" title="Descargar playlist completa para modo Offline">&#11015;</button>
+        </div>
+
+        <div class="playlist-item" data-playlist-id="pl-phantom">
+          <div class="playlist-cover-mini">&#127917;</div>
+          <div class="playlist-info">
+            <div class="playlist-title">Phantom Thieves Calling Card</div>
+            <div class="playlist-meta">Algoritmo YTM • 20 pistas</div>
+          </div>
+          <button type="button" class="pin-offline-btn" data-pin-playlist="pl-phantom" title="Descargar playlist completa para modo Offline">&#11015;</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         TOP BAR: SEARCH, SONG/VIDEO SWITCHER, NETWORK DROP & GOOGLE ACCOUNT
+         ==================================================================== -->
+    <header id="top-bar" class="liquid-glass">
+      <div class="topbar-left">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Buscar canciones, videos oficiales, álbumes o artistas en YT Music..."
+            aria-label="Buscar música o videos"
+          />
+          <span class="search-shortcut-badge">Ctrl+K</span>
+        </div>
+      </div>
+
+      <!-- Instant Song / Video Mode Pill Switcher (Best of YT Music) -->
+      <div class="topbar-center">
+        <div class="mode-pill-switcher" id="mode-switcher" role="tablist" aria-label="Alternar modo Canción o Video">
+          <button type="button" class="mode-pill-btn active" id="btn-mode-song" data-mode="song" role="tab" aria-selected="true">
+            <span>&#127925;</span>
+            <span>Canción</span>
+          </button>
+          <button type="button" class="mode-pill-btn" id="btn-mode-video" data-mode="video" role="tab" aria-selected="false">
+            <span>&#127916;</span>
+            <span>Video</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Network Resilience Indicator, Quick Theme/Layout Selectors & Google Account Pill -->
+      <div class="topbar-right">
+        <div class="network-status-group" id="network-status-pill" data-network="online" title="Motor anti-cortes con caché en IndexedDB y buffer de respaldo">
+          <span class="status-dot" id="network-status-dot"></span>
+          <span id="network-status-text">Red Estable • Buffer OK</span>
+          <button type="button" class="btn-simulate-drop" id="btn-simulate-drop" title="Simular caída de red para probar que el audio continúa desde caché sin cortes">
+            Simular Caída
+          </button>
+        </div>
+
+        <select id="quick-theme-select" class="quick-select-pill" title="Cambio rápido de Tema" aria-label="Seleccionar tema visual">
+          <option value="aigis">Tema: Aigis (P3)</option>
+          <option value="persona3">Tema: Persona 3 Reload</option>
+          <option value="persona5">Tema: Persona 5 Phone UI</option>
+          <option value="sonic">Tema: Sonic Supersonic</option>
+          <option value="miku">Tema: Hatsune Miku CV01</option>
+          <option value="godzilla">Tema: Godzilla Atomic</option>
+          <option value="tachyon">Tema: Agnes Tachyon Lab</option>
+        </select>
+
+        <select id="quick-layout-select" class="quick-select-pill" title="Cambio rápido de Diseño" aria-label="Seleccionar diseño de interfaz">
+          <option value="hybrid">Layout: Híbrido (Spotify+YTM)</option>
+          <option value="ytmusic">Layout: YT Music Mejorado</option>
+          <option value="spotify">Layout: Spotify Clásico</option>
+          <option value="custom">Layout: Custom Modular</option>
+        </select>
+
+        <button type="button" class="account-pill-btn" id="btn-account-modal" title="Configurar sesión de Google y escudo AdBlock automático">
+          <div class="account-avatar" id="account-avatar-badge">G</div>
+          <div class="account-meta">
+            <span class="account-name" id="account-name-display">Cuenta Google</span>
+            <span class="account-tier-badge" id="account-tier-badge">&#128737; FREE + AdBlock Activo</span>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         MAIN CENTER STAGE: 5 DYNAMIC VIEWS
+         ==================================================================== -->
+    <main id="main-stage" class="liquid-glass">
+
+      <!-- ==================================================================
+           VIEW 1: HOME / ALGORITMO YT MUSIC
+           ================================================================== -->
+      <section id="view-home" class="view-section active" aria-label="Inicio y recomendaciones del algoritmo">
+        <div class="filter-chips-bar" id="search-filters">
+          <button type="button" class="filter-chip active" data-filter="all">Todo</button>
+          <button type="button" class="filter-chip" data-filter="songs">Canciones</button>
+          <button type="button" class="filter-chip" data-filter="videos">Videos</button>
+          <button type="button" class="filter-chip" data-filter="energetico">Energético / Overdrive</button>
+          <button type="button" class="filter-chip" data-filter="vocaloid">Vocaloid / Synth</button>
+          <button type="button" class="filter-chip" data-filter="jrpg">OST J-RPG &amp; Anime</button>
+          <button type="button" class="filter-chip" data-filter="offline">Disponibles Offline</button>
+        </div>
+
+        <!-- Hero Banner with Thematic HUD Motto -->
+        <div class="hero-banner" id="hero-banner">
+          <div class="hero-content">
+            <div class="hero-hud-tag" id="hero-hud-motto">
+              <span>&#9678;</span>
+              <span id="hero-motto-text">UNIDAD AIGIS // PROTOCOLO DE AUDIO SIN INTERRUPCIONES ACTIVO</span>
+            </div>
+            <h1 class="hero-title" id="hero-title">Superación del Algoritmo YT Music con Liquid Glass</h1>
+            <p class="hero-subtitle" id="hero-subtitle">
+              Extracción dinámica de colores de portada en tiempo real, cambio instantáneo entre Canción y Video sin perder el segundo exacto, AdBlock integrado para cuentas gratuitas y blindaje anti-cortes de red.
+            </p>
+            <div class="hero-actions">
+              <button type="button" class="btn-primary" id="btn-hero-play">
+                <span>&#9654;</span>
+                <span>Reproducir Mix Algoritmo</span>
+              </button>
+              <button type="button" class="btn-secondary" id="btn-hero-orgia" title="Activar sobrecarga visual y preset de ecualización temática">
+                <span>&#9889;</span>
+                <span id="btn-orgia-label">Activar Modo Orgia / Overdrive</span>
+              </button>
+              <button type="button" class="btn-secondary" id="btn-hero-open-stage">
+                <span>&#127916;</span>
+                <span>Abrir Escenario Canción/Video</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Picks (Selección Rápida del Algoritmo) -->
+        <div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Selección Rápida del Algoritmo</h2>
+              <p class="section-subtitle">Clic para reproducir y adaptar toda la interfaz al color de la portada</p>
+            </div>
+          </div>
+          <div class="quick-picks-grid" id="quick-picks-grid">
+            <!-- Populated dynamically by app.js with rich fallback items -->
+          </div>
+        </div>
+
+        <!-- Mixed For You (Mezclas Personalizadas) -->
+        <div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Supermixes Creados Para Ti</h2>
+              <p class="section-subtitle">Combinando el motor de recomendación de YouTube Music con caché inteligente</p>
+            </div>
+          </div>
+          <div class="cards-row-grid" id="mixed-for-you-grid">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+
+        <!-- Dense Track Table (Catálogo Principal + Estado Offline y Video) -->
+        <div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Pistas Destacadas &amp; Buffer Resiliente</h2>
+              <p class="section-subtitle">Doble clic o botón de reproducción • Incluye conmutación directa Canción/Video</p>
+            </div>
+          </div>
+          <div class="track-table-container">
+            <table class="track-table" aria-label="Lista de pistas">
+              <thead>
+                <tr>
+                  <th class="track-num-cell">#</th>
+                  <th>Título / Artista</th>
+                  <th>Álbum / Fuente</th>
+                  <th>Modo A/V</th>
+                  <th>Estado Offline</th>
+                  <th>Duración</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tracks-table-body">
+                <!-- Populated by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 2: NOW PLAYING STAGE (CANCIÓN / VIDEO DUAL SYNCHRONIZED VIEW)
+           ================================================================== -->
+      <section id="view-stage" class="view-section" aria-label="Escenario principal de Canción y Video">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="stage-view-heading">Escenario Sincronizado Canción / Video</h2>
+            <p class="section-subtitle">Alterna entre Portada Interactiva y Video Oficial manteniendo el timestamp exacto al milisegundo</p>
+          </div>
+          <div class="hero-actions">
+            <button type="button" class="btn-secondary" id="btn-stage-extract-color">
+              <span>&#127912;</span>
+              <span>Re-extraer Color de Portada</span>
+            </button>
+            <button type="button" class="btn-primary" id="btn-stage-toggle-av">
+              <span>&#128257;</span>
+              <span id="btn-stage-toggle-av-text">Cambiar a Modo Video</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="now-playing-stage-grid">
+          <div class="stage-showcase-card" id="stage-showcase-card">
+            <!-- Thematic HUD Telemetry Overlay -->
+            <div class="hud-telemetry-overlay" id="hud-telemetry">
+              <div class="hud-corner-row">
+                <div class="hud-readout-box" id="hud-top-left">
+                  SYS: AIGIS-OS v4.2 // DSP: 48kHz 32-BIT FLOAT<br />
+                  COLOR EXTRACTOR: <span id="hud-color-hex">#1A56DB</span>
+                </div>
+                <div class="hud-readout-box" id="hud-top-right">
+                  STREAM SHIELD: <span id="hud-shield-state">ADBLOCK + SPONSORBLOCK ON</span><br />
+                  BUFFER HEALTH: <span id="hud-buffer-health">100% (INDEXED-DB READY)</span>
+                </div>
+              </div>
+              <div class="hud-corner-row">
+                <div class="hud-readout-box" id="hud-bottom-left">
+                  MODE: <span id="hud-av-mode-readout">AUDIO MASTER (CANCIÓN)</span>
+                </div>
+                <div class="hud-readout-box" id="hud-bottom-right">
+                  THEME TELEMETRY: <span id="hud-theme-readout">AIGIS // PAPILLON HEART</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Song Mode: Interactive Cover Art + Reticle -->
+            <div id="song-stage-container">
+              <div class="stage-artwork-wrapper">
+                <div class="targeting-reticle" aria-hidden="true"></div>
+                <img
+                  id="stage-cover-img"
+                  src=""
+                  alt="Portada de la pista actual"
+                  crossorigin="anonymous"
+                />
+              </div>
+              <div style="text-align: center;">
+                <h3 class="hero-title" id="stage-track-title" style="font-size: 22px; margin-bottom: 4px;">Burn My Dread -Reload-</h3>
+                <p class="section-subtitle" id="stage-track-artist" style="font-size: 14px;">Lotus Juice &amp; Azumi Takahashi • Persona 3 Reload OST</p>
+              </div>
+            </div>
+
+            <!-- Video Mode: Synchronized Video Stream / Procedural HD Visual Canvas -->
+            <div id="video-stage-container" class="hidden">
+              <span class="video-hud-badge" id="video-sync-badge">&#9679; VIDEO OFICIAL SINCRONIZADO (0ms DRIFT)</span>
+              <video id="stage-video-element" playsinline muted crossorigin="anonymous"></video>
+              <canvas id="video-canvas-fallback" width="854" height="480"></canvas>
+            </div>
+
+            <!-- Real-time Web Audio API Frequency Visualizer -->
+            <canvas id="visualizer-canvas" width="640" height="76" aria-label="Visualizador de frecuencias de audio"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 3: DOWNLOADS & OFFLINE RESILIENCE MANAGER
+           ================================================================== -->
+      <section id="view-downloads" class="view-section" aria-label="Gestor de descargas y resiliencia offline">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Motor de Descargas Multi-Chunk &amp; Resiliencia Offline</h2>
+            <p class="section-subtitle">
+              Descarga fragmentada con verificación de integridad SHA/CRC, reintento exponencial automático y conmutación instantánea si se cae el Wi-Fi
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button type="button" class="btn-primary" id="btn-download-current">
+              <span>&#11015;</span>
+              <span>Descargar Pista Actual</span>
+            </button>
+            <button type="button" class="btn-secondary" id="btn-verify-all-chunks">
+              <span>&#128737;</span>
+              <span>Verificar Integridad de Caché</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="offline-stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Pistas en Caché Offline</span>
+            <span class="stat-value" id="stat-offline-count">4 Pistas</span>
+            <span class="stat-sub">IndexedDB + OPFS Persistente</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Espacio Verificado</span>
+            <span class="stat-value" id="stat-storage-used">28.4 MB</span>
+            <span class="stat-sub">0 bloques corruptos detectados</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Salud del Stream</span>
+            <span class="stat-value" id="stat-stream-health">99.98%</span>
+            <span class="stat-sub" id="stat-failover-sub">Watchdog Anti-Cortes Activo</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Anuncios &amp; Cortes Evitados</span>
+            <span class="stat-value" id="stat-adblock-hits">142</span>
+            <span class="stat-sub">AdShield + SponsorBlock Integrado</span>
+          </div>
+        </div>
+
+        <div id="downloads-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Populated dynamically by offline-sync.js / app.js -->
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 4: AUDIO DSP & 10-BAND GRAPHIC/PARAMETRIC EQUALIZER STUDIO
+           ================================================================== -->
+      <section id="view-equalizer" class="view-section" aria-label="Estudio de Ecualización y Audio DSP">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Estudio de Audio DSP &amp; Ecualizador de 10 Bandas</h2>
+            <p class="section-subtitle">Procesamiento en tiempo real mediante Web Audio API BiquadFilterNodes, Compresor Dinámico y Normalización LUFS</p>
+          </div>
+          <div class="hero-actions">
+            <select id="eq-preset-select" class="quick-select-pill" aria-label="Preajustes de ecualización">
+              <option value="flat">Preset: Estudio Plano (Flat)</option>
+              <option value="orgia">Preset: Aigis Orgia Overdrive (Punchy)</option>
+              <option value="vocaloid">Preset: Hatsune Miku Vocaloid Clarity</option>
+              <option value="tachyon">Preset: Agnes Tachyon Speed Bass</option>
+              <option value="bass">Preset: Kaiju Sub-Bass (Godzilla)</option>
+              <option value="rock">Preset: Phantom Thieves J-Rock</option>
+              <option value="sonic">Preset: Supersonic Boost Treble</option>
+            </select>
+            <button type="button" class="btn-secondary" id="btn-eq-reset">Restablecer (0 dB)</button>
+          </div>
+        </div>
+
+        <div class="eq-studio-layout">
+          <!-- Left Card: Preamp + 10-Band Vertical Sliders -->
+          <div class="eq-panel-card">
+            <div class="dsp-control-header">
+              <span>Bandas de Frecuencia ISO (31Hz — 16kHz) + Preamp</span>
+              <span id="eq-active-status-label" style="color: var(--active-secondary);">DSP ACTIVO</span>
+            </div>
+            <div class="eq-sliders-rack" id="eq-sliders-rack">
+              <div class="eq-band-column">
+                <span class="eq-db-val" id="eq-val-preamp">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider" id="eq-preamp-slider" min="-12" max="12" step="0.5" value="0" aria-label="Preamp" />
+                </div>
+                <span class="eq-freq-label">PRE</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="0">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="0" data-freq="31" min="-12" max="12" step="0.5" value="0" aria-label="31 Hz" />
+                </div>
+                <span class="eq-freq-label">31</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="1">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="1" data-freq="62" min="-12" max="12" step="0.5" value="0" aria-label="62 Hz" />
+                </div>
+                <span class="eq-freq-label">62</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="2">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="2" data-freq="125" min="-12" max="12" step="0.5" value="0" aria-label="125 Hz" />
+                </div>
+                <span class="eq-freq-label">125</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="3">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="3" data-freq="250" min="-12" max="12" step="0.5" value="0" aria-label="250 Hz" />
+                </div>
+                <span class="eq-freq-label">250</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="4">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="4" data-freq="500" min="-12" max="12" step="0.5" value="0" aria-label="500 Hz" />
+                </div>
+                <span class="eq-freq-label">500</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="5">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="5" data-freq="1000" min="-12" max="12" step="0.5" value="0" aria-label="1 kHz" />
+                </div>
+                <span class="eq-freq-label">1k</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="6">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="6" data-freq="2000" min="-12" max="12" step="0.5" value="0" aria-label="2 kHz" />
+                </div>
+                <span class="eq-freq-label">2k</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="7">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="7" data-freq="4000" min="-12" max="12" step="0.5" value="0" aria-label="4 kHz" />
+                </div>
+                <span class="eq-freq-label">4k</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="8">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="8" data-freq="8000" min="-12" max="12" step="0.5" value="0" aria-label="8 kHz" />
+                </div>
+                <span class="eq-freq-label">8k</span>
+              </div>
+              <div class="eq-band-column">
+                <span class="eq-db-val" data-eq-label="9">0dB</span>
+                <div class="eq-vertical-slider-wrap">
+                  <input type="range" class="eq-vertical-slider eq-band-input" data-band="9" data-freq="16000" min="-12" max="12" step="0.5" value="0" aria-label="16 kHz" />
+                </div>
+                <span class="eq-freq-label">16k</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Card: Spatial DSP, Bass Boost, Crossfade, LUFS & Codec Selector -->
+          <div class="eq-panel-card">
+            <div class="dsp-controls-grid">
+              <div class="dsp-control-box">
+                <div class="dsp-control-header">
+                  <span>Sub-Bass Boost</span>
+                  <span id="dsp-bass-val">0 dB</span>
+                </div>
+                <input type="range" class="horizontal-slider" id="dsp-bass-boost" min="0" max="12" step="0.5" value="0" />
+              </div>
+
+              <div class="dsp-control-box">
+                <div class="dsp-control-header">
+                  <span>Spatial Stereo Exciter</span>
+                  <span id="dsp-reverb-val">15%</span>
+                </div>
+                <input type="range" class="horizontal-slider" id="dsp-reverb" min="0" max="100" step="1" value="15" />
+              </div>
+
+              <div class="dsp-control-box">
+                <div class="dsp-control-header">
+                  <span>Crossfade Inteligente</span>
+                  <span id="dsp-crossfade-val">2.0 s</span>
+                </div>
+                <input type="range" class="horizontal-slider" id="dsp-crossfade" min="0" max="12" step="0.5" value="2" />
+              </div>
+
+              <div class="dsp-control-box">
+                <div class="dsp-control-header">
+                  <span>Calidad de Stream</span>
+                </div>
+                <select id="select-audio-quality" class="quick-select-pill" style="width: 100%;">
+                  <option value="opus160">Opus 160kbps (Óptimo YTM)</option>
+                  <option value="aac256">AAC 256kbps (Mastering)</option>
+                  <option value="low64">HE-AAC 64kbps (Ahorro Datos)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span>Ecualización Inteligente Adaptativa (Smart Auto-EQ Opcional)</span>
+                  <span class="badge-pill video-avail" id="smart-eq-reason-badge">Auto-EQ: Aigis / Overdrive → Aigis Orgia Overdrive</span>
+                </div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Ajusta automáticamente las 10 bandas, Preamp y Sub-Bass según el género, tags y BPM de cada pista</div>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-smart-eq" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight: 600; font-size: 13px;">Reproducción Gapless (Sin pausas entre pistas)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Pre-carga el siguiente buffer 8 segundos antes del final</div>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-gapless" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight: 600; font-size: 13px;">Normalización de Volumen (-14 LUFS)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Evita saltos bruscos de volumen entre canciones y videos</div>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-lufs-norm" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 5: THEME & LAYOUT CUSTOMIZER (4 LAYOUTS + 7 THEMES + LIQUID GLASS)
+           ================================================================== -->
+      <section id="view-customizer" class="view-section" aria-label="Personalizador de Temas, Layouts y Liquid Glass">
+        <div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">1. Arquitectura de Layout (4 Diseños Conmutables)</h2>
+              <p class="section-subtitle">Elige entre el Híbrido definitivo Spotify+YTMusic, los diseños clásicos mejorados o tu propio grid modular</p>
+            </div>
+          </div>
+
+          <div class="customizer-cards-grid" id="layout-cards-container">
+            <div class="selector-card active" data-layout-pick="hybrid">
+              <div class="selector-card-title">&#10024; Híbrido Spotify + YTMusic</div>
+              <p class="selector-card-desc">Lo mejor de ambos: Biblioteca lateral de Spotify + Conmutador Canción/Video y pestañas derechas de YT Music + Barra flotante Liquid Glass.</p>
+            </div>
+
+            <div class="selector-card" data-layout-pick="ytmusic">
+              <div class="selector-card-title">&#127916; YT Music Mejorado</div>
+              <p class="selector-card-desc">Barra superior completa, escenario central oscuro inmersivo para video/portada y cola lateral acoplada.</p>
+            </div>
+
+            <div class="selector-card" data-layout-pick="spotify">
+              <div class="selector-card-title">&#127911; Spotify Desktop Clásico</div>
+              <p class="selector-card-desc">División en 3 islas redondeadas (Biblioteca, Feed Central y Panel Derecho) con barra de transporte inferior.</p>
+            </div>
+
+            <div class="selector-card" data-layout-pick="custom">
+              <div class="selector-card-title">&#9881; Custom Modular Grid</div>
+              <p class="selector-card-desc">Ajusta posición del sidebar, densidad de filas, barra flotante o acoplada e intensidad de refracción Liquid Glass.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">2. Experiencias Temáticas (7 Skins Oficiales)</h2>
+              <p class="section-subtitle">Cada tema transforma la paleta, tipografía HUD, patrones de fondo, cursores de progreso y telemetría</p>
+            </div>
+          </div>
+
+          <div class="customizer-cards-grid" id="theme-cards-container">
+            <div class="selector-card active" data-theme-pick="aigis">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #f8fafc;"></span>
+                <span class="color-swatch" style="background: #1a56db;"></span>
+                <span class="color-swatch" style="background: #f59e0b;"></span>
+              </div>
+              <div class="selector-card-title">Aigis (Persona 3)</div>
+              <p class="selector-card-desc">Titanio marfil, azul cobalto profundo, núcleo dorado Papillon Heart, retícula HUD y Modo Orgia.</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="persona3">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #040b18;"></span>
+                <span class="color-swatch" style="background: #00d4ff;"></span>
+                <span class="color-swatch" style="background: #0077ff;"></span>
+              </div>
+              <div class="selector-card-title">Persona 3 Reload</div>
+              <p class="selector-card-desc">Hora Oscura y cian Tártaro, tarjetas diagonales inclinadas y transiciones geométricas S.E.E.S.</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="persona5">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #e60012;"></span>
+                <span class="color-swatch" style="background: #0a0a0a;"></span>
+                <span class="color-swatch" style="background: #ffffff;"></span>
+              </div>
+              <div class="selector-card-title">Persona 5 Phone IM UI</div>
+              <p class="selector-card-desc">Carmesí rebelde Phantom Thieves, recortes poligonales agresivos y pistas estilo chat IM de Joker.</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="sonic">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #0055ff;"></span>
+                <span class="color-swatch" style="background: #ffd700;"></span>
+                <span class="color-swatch" style="background: #00e5ff;"></span>
+              </div>
+              <div class="selector-card-title">Sonic the Hedgehog</div>
+              <p class="selector-card-desc">Azul supersónico, anillos dorados, patrón Emerald Hill y barra de progreso estilo Boost Gauge.</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="miku">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #39c5bb;"></span>
+                <span class="color-swatch" style="background: #ff2a85;"></span>
+                <span class="color-swatch" style="background: #070d12;"></span>
+              </div>
+              <div class="selector-card-title">Hatsune Miku CV01</div>
+              <p class="selector-card-desc">Ciber-turquesa Vocaloid, magenta eléctrico, matriz de sintetizador e insignia "01".</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="godzilla">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #0b0f14;"></span>
+                <span class="color-swatch" style="background: #00f0ff;"></span>
+                <span class="color-swatch" style="background: #f59e0b;"></span>
+              </div>
+              <div class="selector-card-title">Godzilla Atomic Breath</div>
+              <p class="selector-card-desc">Obsidiana dorsal Kaiju, azul neón radiación Cherenkov y alertas Monarch ámbar.</p>
+            </div>
+
+            <div class="selector-card" data-theme-pick="tachyon">
+              <div class="swatch-row">
+                <span class="color-swatch" style="background: #39ff14;"></span>
+                <span class="color-swatch" style="background: #f59e0b;"></span>
+                <span class="color-swatch" style="background: #f8fafc;"></span>
+              </div>
+              <div class="selector-card-title">Agnes Tachyon (Uma Musume)</div>
+              <p class="selector-card-desc">Laboratorio bioluminiscente verde lima experimental, tubos de ensayo ámbar y telemetría Tachyon Factor.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Liquid Glass Refraction, Dynamic Cover Color & Low-Resource Eco Mode Controls -->
+        <div class="eq-panel-card">
+          <div class="section-header" style="margin-bottom: 4px;">
+            <h3 class="section-title">3. Motor Liquid Glass, Color Dinámico de Portada &amp; Modo Eco (Bajo RAM/CPU)</h3>
+          </div>
+
+          <div class="dsp-controls-grid">
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight: 600;">Adaptación Dinámica al Color de la Canción</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Extrae la paleta dominante de la portada actual e ilumina el cristal líquido</div>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-dynamic-color" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight: 600;">Modo Eco / Ultra-Bajo Consumo (Low RAM &amp; GPU)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Desactiva pases de desenfoque GPU pesados para máxima eficiencia</div>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="toggle-eco-mode" />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="dsp-control-box">
+              <div class="dsp-control-header">
+                <span>Intensidad Desenfoque Liquid Glass</span>
+                <span id="glass-blur-val">22px</span>
+              </div>
+              <input type="range" class="horizontal-slider" id="slider-glass-blur" min="0" max="40" step="1" value="22" />
+            </div>
+
+            <div class="dsp-control-box">
+              <div class="dsp-control-header">
+                <span>Color Personalizado (Primario / Secundario / Acento)</span>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="color" id="custom-color-primary" value="#1a56db" title="Color Primario" style="width: 36px; height: 28px; cursor: pointer;" />
+                <input type="color" id="custom-color-secondary" value="#38bdf8" title="Color Secundario" style="width: 36px; height: 28px; cursor: pointer;" />
+                <input type="color" id="custom-color-accent" value="#f59e0b" title="Color de Acento" style="width: 36px; height: 28px; cursor: pointer;" />
+                <button type="button" class="btn-secondary" id="btn-apply-custom-colors" style="padding: 4px 10px; font-size: 11px;">Aplicar Paleta</button>
+              </div>
+            </div>
+
+            <div class="dsp-control-box">
+              <div class="dsp-control-header">
+                <span>Posición Sidebar (Layout Custom)</span>
+              </div>
+              <select id="select-sidebar-pos" class="quick-select-pill">
+                <option value="left">Izquierda (Estándar)</option>
+                <option value="right">Derecha Invertida</option>
+                <option value="hidden">Oculto (Escenario Completo)</option>
+              </select>
+            </div>
+
+            <div class="dsp-control-box">
+              <div class="dsp-control-header">
+                <span>Densidad de Filas de Canciones</span>
+              </div>
+              <select id="select-row-density" class="quick-select-pill">
+                <option value="comfortable">Confortable (Híbrido)</option>
+                <option value="compact">Compacta (Alta densidad Spotify)</option>
+                <option value="spacious">Espaciosa (Táctil / TV)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         RIGHT PANEL: QUEUE (COLA), SYNCHRONIZED LYRICS & RELATED ALGORITHM
+         ==================================================================== -->
+    <aside id="right-panel" class="liquid-glass" aria-label="Cola de reproducción, letras y canciones relacionadas">
+      <div class="panel-tabs-header" role="tablist">
+        <button type="button" class="panel-tab-btn active" data-tab="queue" role="tab" aria-selected="true">
+          Cola
+        </button>
+        <button type="button" class="panel-tab-btn" data-tab="lyrics" role="tab" aria-selected="false">
+          Letras
+        </button>
+        <button type="button" class="panel-tab-btn" data-tab="related" role="tab" aria-selected="false">
+          Algoritmo
+        </button>
+      </div>
+
+      <!-- Tab 1: Up Next / Queue -->
+      <div id="tab-queue" class="panel-tab-content active" role="tabpanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: 600;">SIGUIENTE EN LA COLA</span>
+          <button type="button" class="btn-simulate-drop" id="btn-clear-queue" title="Restaurar cola del algoritmo">Auto-Mix ON</button>
+        </div>
+        <div id="queue-list" style="display: flex; flex-direction: column; gap: 6px;">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Synchronized Lyrics -->
+      <div id="tab-lyrics" class="panel-tab-content" role="tabpanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: 600;">LETRAS SINCRONIZADAS (CLIC PARA SALTAR)</span>
+          <span class="badge-pill video-avail">SYNC</span>
+        </div>
+        <div class="lyrics-scroll-box" id="lyrics-container">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Related / YTMusic Algorithm Radio -->
+      <div id="tab-related" class="panel-tab-content" role="tabpanel">
+        <div style="margin-bottom: 6px;">
+          <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: 600;">DESCUBRIMIENTO DEL ALGORITMO YT MUSIC</span>
+        </div>
+        <div id="related-list" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         BOTTOM LIQUID GLASS PLAYER BAR
+         ==================================================================== -->
+    <footer id="player-bar" class="liquid-glass" aria-label="Controles de reproducción">
+      <!-- Left: Current Track Cover, Title/Artist, Like & Dynamic Extracted Color Swatch -->
+      <div class="player-track-left">
+        <div class="player-cover-wrap" id="player-cover-trigger" title="Ir al Escenario Canción/Video">
+          <img id="player-cover-img" src="" alt="Portada en miniatura" crossorigin="anonymous" />
+        </div>
+        <div class="player-track-meta">
+          <div id="player-track-title">Burn My Dread -Reload-</div>
+          <div id="player-track-artist">Lotus Juice &amp; Azumi Takahashi</div>
+        </div>
+        <div class="dynamic-color-swatch-badge" id="dynamic-color-badge" title="Color extraído dinámicamente de la portada actual"></div>
+        <button type="button" class="icon-btn" id="btn-like-track" title="Añadir a Tus Me Gusta" aria-label="Me gusta">&#9825;</button>
+      </div>
+
+      <!-- Center: Transport Buttons & Interactive Seek Bar with Buffer Fill -->
+      <div class="player-transport-center">
+        <div class="transport-buttons">
+          <button type="button" class="icon-btn" id="btn-shuffle" title="Modo Aleatorio Inteligente" aria-label="Aleatorio">&#128256;</button>
+          <button type="button" class="icon-btn" id="btn-prev" title="Anterior" aria-label="Canción anterior">&#9198;</button>
+          <button type="button" class="btn-play-main" id="btn-play-pause" title="Reproducir / Pausar (Espacio)" aria-label="Reproducir o Pausar">&#9654;</button>
+          <button type="button" class="icon-btn" id="btn-next" title="Siguiente" aria-label="Siguiente canción">&#9197;</button>
+          <button type="button" class="icon-btn" id="btn-repeat" title="Repetir" aria-label="Modo repetición">&#128257;</button>
+        </div>
+
+        <div class="seek-bar-row">
+          <span class="time-label" id="time-current">0:00</span>
+          <div class="seek-track-wrapper" id="seek-track-wrapper">
+            <div class="seek-buffer-fill" id="seek-buffer-bar"></div>
+            <div class="seek-progress-fill" id="seek-progress-bar"></div>
+            <input type="range" id="seek-slider-input" min="0" max="100" step="0.1" value="0" aria-label="Barra de progreso de la canción" />
+          </div>
+          <span class="time-label" id="time-total">3:42</span>
+        </div>
+      </div>
+
+      <!-- Right: Quick Song/Video Toggle, EQ Badge, Offline Download, Volume & Eco RAM/CPU Monitor -->
+      <div class="player-controls-right">
+        <button type="button" class="icon-btn" id="btn-player-mode-toggle" title="Conmutar instantáneamente entre Canción y Video" aria-label="Alternar Canción o Video">
+          &#127916;
+        </button>
+        <button type="button" class="icon-btn" id="btn-player-eq" title="Abrir Ecualizador de 10 Bandas" aria-label="Abrir Ecualizador">
+          &#127898;
+        </button>
+        <button type="button" class="icon-btn" id="btn-player-download" title="Guardar pista actual para reproducción Offline sin cortes" aria-label="Descargar pista">
+          &#11015;
+        </button>
+
+        <div class="volume-control-group">
+          <button type="button" class="icon-btn" id="btn-mute" title="Silenciar / Restaurar audio" aria-label="Volumen">&#128266;</button>
+          <input type="range" class="horizontal-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.85" aria-label="Control de volumen" />
+        </div>
+
+        <button type="button" class="eco-resource-badge" id="eco-resource-badge" title="Uso de recursos ultraligero • Clic para alternar Modo Eco">
+          <span>&#9889;</span>
+          <span id="eco-resource-text">RAM 34MB • GPU OK</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================================
+       GOOGLE ACCOUNT SESSION & AUTO-ADBLOCK SHIELD MODAL
+       ====================================================================== -->
+  <div class="modal-backdrop" id="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+    <div class="modal-dialog liquid-glass-elevated">
+      <div class="modal-header">
+        <h2 class="modal-title" id="account-modal-title">Sesión de Google &amp; Escudo AdBlock Automático</h2>
+        <button type="button" class="icon-btn" id="btn-close-account-modal" aria-label="Cerrar ventana">&#10005;</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-secondary);">
+        MP3-Aigis solo utiliza detección básica de sesión para sincronizar tu algoritmo de YouTube Music y determinar si tu cuenta es <strong>Gratuita</strong> (activando automáticamente el filtro de anuncios y SponsorBlock sin interrupciones) o <strong>YouTube Music Premium</strong>.
+      </p>
+
+      <div class="form-field">
+        <label for="input-account-name">Nombre / Alias de Perfil</label>
+        <input type="text" class="form-input" id="input-account-name" value="Aigis Unit 07" />
+      </div>
+
+      <div class="form-field">
+        <label>Simular / Seleccionar Tipo de Suscripción detectada</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <button type="button" class="selector-card active" data-tier-pick="free" id="btn-tier-free" style="padding: 12px;">
+            <div class="selector-card-title" style="font-size: 14px;">&#128737; Cuenta Gratuita</div>
+            <p class="selector-card-desc">Auto-AdBlock + SponsorBlock activados automáticamente. Cero anuncios de audio o video.</p>
+          </button>
+          <button type="button" class="selector-card" data-tier-pick="premium" id="btn-tier-premium" style="padding: 12px;">
+            <div class="selector-card-title" style="font-size: 14px;">&#128081; YT Music Premium</div>
+            <p class="selector-card-desc">Streams directos de alto bitrate (Opus 160k / AAC 256k) nativos sin anuncios.</p>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="input-google-session">Cookie / Token de Sesión Opcional (Solo lectura local)</label>
+        <input
+          type="password"
+          class="form-input"
+          id="input-google-session"
+          placeholder="SAPISID / __Secure-3PAPISID (Opcional, se guarda solo en tu navegador)"
+        />
+      </div>
+
+      <div class="form-field" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 8px;">
+        <label>Perfiles y Sesiones Aisladas (Prestar Cuenta / No Cruzar Algoritmo)</label>
+        <div id="profile-selector-list" style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 6px;">
+          <button type="button" class="selector-card active" data-profile-id="prof_main" data-profile-mode="standard" style="padding: 10px 12px; text-align: left;">
+            <div class="selector-card-title" style="font-size: 13px;">&#128100; Perfil Principal — Sincronizado (<code>prof_main</code>)</div>
+            <p class="selector-card-desc" style="font-size: 11.5px; margin: 2px 0 0;">Sincroniza historial, likes y recomendaciones con tu algoritmo principal.</p>
+          </button>
+          <button type="button" class="selector-card" data-profile-id="prof_guest_online" data-profile-mode="isolated_online" style="padding: 10px 12px; text-align: left;">
+            <div class="selector-card-title" style="font-size: 13px;">&#128737; Cuenta Prestada / Invitado — Online sin cruzar algoritmo (<code>prof_guest_online</code>)</div>
+            <p class="selector-card-desc" style="font-size: 11.5px; margin: 2px 0 0;">Sandbox de Algoritmo activo: streaming online completo sin contaminar tus mezclas ni historial.</p>
+          </button>
+          <button type="button" class="selector-card" data-profile-id="prof_private_offline" data-profile-mode="isolated_offline" style="padding: 10px 12px; text-align: left;">
+            <div class="selector-card-title" style="font-size: 13px;">&#128274; Sesión Privada — Solo Offline (<code>prof_private_offline</code>)</div>
+            <p class="selector-card-desc" style="font-size: 11.5px; margin: 2px 0 0;">Cero telemetría externa: reproduce exclusivamente desde bóveda SQLite / caché local.</p>
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 8px; align-items: center;">
+          <input type="text" class="form-input" id="input-new-profile-name" placeholder="Nuevo perfil (ej. Gimnasio / Fiesta)" style="font-size: 12px; padding: 7px 10px;" />
+          <select id="select-new-profile-mode" class="quick-select-pill" style="width: 100%; font-size: 12px; padding: 7px 10px;">
+            <option value="standard">Estándar (Sincronizado)</option>
+            <option value="isolated_online">Prestada / Sandbox (No cruzar algoritmo)</option>
+            <option value="isolated_offline">Privado (Solo Offline Puro)</option>
+          </select>
+          <button type="button" class="btn-secondary" id="btn-create-profile" style="font-size: 12px; padding: 7px 12px; white-space: nowrap;">+ Crear Perfil</button>
+        </div>
+      </div>
+
+      <div class="form-field" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 8px;">
+        <label>Continuar en Otro Dispositivo (Cross-Device Handoff)</label>
+        <div id="handoff-status-box" style="font-size: 12px; color: var(--text-secondary); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; margin-bottom: 8px;">
+          Estado Handoff: Listo para sincronizar pista, modo (Canción/Video) y segundo exacto entre dispositivos.
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button type="button" class="btn-secondary" id="btn-handoff-push" style="font-size: 12px; padding: 8px 10px;">
+            &#128228; Enviar posición actual para seguir en otro dispositivo
+          </button>
+          <button type="button" class="btn-primary" id="btn-handoff-pull" style="font-size: 12px; padding: 8px 10px;">
+            &#128229; Continuar reproducción desde otro dispositivo
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
+        <button type="button" class="btn-secondary" id="btn-cancel-account-modal">Cancelar</button>
+        <button type="button" class="btn-primary" id="btn-save-account-modal">Guardar Configuración</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- Core Application Scripts -->
+  <script src="js/color-extractor.js"></script>
+  <script src="js/audio-engine.js"></script>
+  <script src="js/offline-sync.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

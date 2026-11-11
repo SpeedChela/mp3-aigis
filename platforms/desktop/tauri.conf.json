@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MP3-Aigis",
+  "version": "1.0.0",
+  "identifier": "org.aigis.mp3player",
+  "build": {
+    "frontendDist": "../../web",
+    "devUrl": "http://127.0.0.1:8765"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "MP3-Aigis // YTMusic & Spotify Hybrid Player",
+        "width": 1360,
+        "height": 860,
+        "minWidth": 900,
+        "minHeight": 620,
+        "resizable": true,
+        "decorations": true,
+        "transparent": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage", "msi", "nsis"],
+    "icon": [
+      "icons/icon.png"
+    ],
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
+  }
+}

@@ -1,0 +1,412 @@
+/* ==========================================================================
+   MP3-AIGIS — 7 Signature Thematic Skins & Dynamic Cover Color Adaptation
+   1. Aigis (Persona 3 Anti-Shadow Weapon) — Flagship Default
+   2. Persona 3 Reload (Dark Hour / Tartarus Cyan)
+   3. Persona 5 Phone / IM UI (Phantom Thieves Crimson / Jagged Polygons)
+   4. Sonic the Hedgehog (Supersonic Blue / Golden Rings / Emerald Hill Checkers)
+   5. Hatsune Miku CV01 (Vocaloid Cyber-Teal / Electric Magenta / Matrix Grid)
+   6. Godzilla (Kaiju Obsidian / Cherenkov Atomic Breath Blue / Monarch Amber)
+   7. Agnes Tachyon (Uma Musume Bioluminescent Lab Lime / Molecular Grid / Amber)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. AIGIS — ANTI-SHADOW SUPPRESSION WEAPON (DEFAULT FLAGSHIP THEME)
+   Ivory/Titanium Frame, Deep Cobalt Blue, Papillon Heart Gold Core & Orgia Mode
+   ========================================================================== */
+body[data-theme="aigis"] {
+  --bg-base: #070d19;
+  --bg-surface: rgba(15, 27, 50, 0.62);
+  --bg-surface-elevated: rgba(24, 41, 74, 0.74);
+  --bg-surface-hover: rgba(38, 66, 118, 0.45);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #7c93b6;
+
+  --theme-primary: #1a56db;
+  --theme-secondary: #38bdf8;
+  --theme-accent: #f59e0b;
+  --glass-border: rgba(226, 232, 240, 0.22);
+  --glass-border-highlight: rgba(245, 158, 11, 0.48);
+}
+
+/* Titanium Ivory & Gold Ribbing Accents on Aigis Panels */
+body[data-theme="aigis"] #left-sidebar,
+body[data-theme="aigis"] #player-bar {
+  border-top: 2px solid rgba(248, 250, 252, 0.42);
+  box-shadow: inset 0 1px 0 rgba(245, 158, 11, 0.35), 0 12px 34px rgba(10, 22, 48, 0.65);
+}
+
+body[data-theme="aigis"] #theme-pattern-overlay {
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.12) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px, 64px 64px, 64px 64px;
+  opacity: 0.55;
+}
+
+body[data-theme="aigis"] .targeting-reticle {
+  border: 1.5px dashed rgba(245, 158, 11, 0.65);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35), inset 0 0 18px rgba(245, 158, 11, 0.2);
+  animation: aigisReticleSpin 28s linear infinite;
+}
+
+@keyframes aigisReticleSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Orgia Mode Overdrive State */
+body[data-orgia="true"] {
+  --theme-primary: #f59e0b !important;
+  --theme-secondary: #ef4444 !important;
+  --theme-accent: #38bdf8 !important;
+}
+
+body[data-orgia="true"] .stage-artwork-wrapper {
+  box-shadow: 0 0 45px rgba(245, 158, 11, 0.8), 0 0 80px rgba(239, 68, 68, 0.5);
+}
+
+/* ==========================================================================
+   2. PERSONA 3 RELOAD — DARK HOUR / TARTARUS CYAN
+   Midnight Abyss, Tartarus Cyan, Diagonal Skewed Cards & SEES Geometric UI
+   ========================================================================== */
+body[data-theme="persona3"] {
+  --bg-base: #040b18;
+  --bg-surface: rgba(8, 22, 46, 0.68);
+  --bg-surface-elevated: rgba(12, 34, 70, 0.78);
+  --bg-surface-hover: rgba(0, 212, 255, 0.18);
+  --text-primary: #f0f9ff;
+  --text-secondary: #7dd3fc;
+  --text-muted: #38bdf8;
+
+  --theme-primary: #0077ff;
+  --theme-secondary: #00d4ff;
+  --theme-accent: #7ef9ff;
+  --glass-border: rgba(0, 212, 255, 0.28);
+  --glass-border-highlight: rgba(0, 212, 255, 0.65);
+}
+
+body[data-theme="persona3"] #theme-pattern-overlay {
+  background:
+    linear-gradient(125deg, rgba(0, 212, 255, 0.12) 0%, transparent 40%),
+    repeating-linear-gradient(
+      -35deg,
+      rgba(0, 212, 255, 0.04) 0px,
+      rgba(0, 212, 255, 0.04) 2px,
+      transparent 2px,
+      transparent 18px
+    );
+  opacity: 0.75;
+}
+
+/* Persona 3 Reload Diagonal Skewed Menu Cards & Nav Items */
+body[data-theme="persona3"] .nav-item {
+  transform: skewX(-8deg);
+  border-radius: 4px;
+}
+
+body[data-theme="persona3"] .nav-item > * {
+  transform: skewX(8deg);
+}
+
+body[data-theme="persona3"] .nav-item.active {
+  background: linear-gradient(90deg, #00d4ff 0%, #0055ff 100%);
+  color: #020813;
+  font-weight: 800;
+  box-shadow: 6px 4px 0 rgba(255, 255, 255, 0.85);
+}
+
+body[data-theme="persona3"] .quick-pick-card,
+body[data-theme="persona3"] .filter-chip {
+  transform: skewX(-6deg);
+  border-radius: 4px;
+}
+
+body[data-theme="persona3"] .queue-item {
+  border-left: 3px solid transparent;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
+}
+
+body[data-theme="persona3"] .queue-item:hover,
+body[data-theme="persona3"] .queue-item.active {
+  transform: translateX(6px) skewX(-4deg);
+  border-left-color: #00d4ff;
+}
+
+/* ==========================================================================
+   3. PERSONA 5 PHONE / IM UI — PHANTOM THIEVES METAVERSE NAVIGATOR
+   Rebellious Crimson (#e60012), Pitch Black, Jagged Polygons & IM Chat Tracks
+   ========================================================================== */
+body[data-theme="persona5"] {
+  --bg-base: #080808;
+  --bg-surface: rgba(18, 18, 18, 0.86);
+  --bg-surface-elevated: rgba(230, 0, 18, 0.88);
+  --bg-surface-hover: rgba(230, 0, 18, 0.28);
+  --text-primary: #ffffff;
+  --text-secondary: #f3f4f6;
+  --text-muted: #9ca3af;
+
+  --theme-primary: #e60012;
+  --theme-secondary: #ff1e27;
+  --theme-accent: #ffffff;
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-border-highlight: #e60012;
+  --glass-radius-lg: 4px;
+  --glass-radius-md: 2px;
+}
+
+body[data-theme="persona5"] #theme-pattern-overlay {
+  background:
+    repeating-radial-gradient(
+      circle at 15% 85%,
+      rgba(230, 0, 18, 0.22) 0,
+      rgba(230, 0, 18, 0.22) 18px,
+      transparent 18px,
+      transparent 40px
+    ),
+    linear-gradient(135deg, rgba(230, 0, 18, 0.25) 0%, transparent 55%);
+  opacity: 0.7;
+}
+
+/* Comic-Book Jagged Polygon Clip-Paths & Tilted Badges */
+body[data-theme="persona5"] .hero-banner {
+  background: linear-gradient(135deg, #e60012 0%, #8f000b 65%, #0a0a0a 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 6px 6px 0 #000000, 10px 10px 0 #e60012;
+  clip-path: polygon(0 0, 99% 2%, 100% 96%, 1% 100%);
+}
+
+body[data-theme="persona5"] .btn-primary,
+body[data-theme="persona5"] .mode-pill-btn.active,
+body[data-theme="persona5"] .filter-chip.active {
+  background: #e60012;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 3px 3px 0 #000000;
+  transform: rotate(-1.5deg) skewX(-8deg);
+  border-radius: 2px;
+}
+
+/* Joker's Smartphone IM Chat-Bubble Style Track & Queue Items */
+body[data-theme="persona5"] .track-row,
+body[data-theme="persona5"] .queue-item {
+  background: #141414;
+  border: 2px solid #ffffff;
+  margin-bottom: 6px;
+  clip-path: polygon(0 4%, 99% 0, 100% 94%, 1% 100%);
+  box-shadow: 4px 4px 0 #e60012;
+}
+
+body[data-theme="persona5"] .track-row.playing,
+body[data-theme="persona5"] .track-row.active,
+body[data-theme="persona5"] .queue-item.active {
+  background: #e60012;
+  color: #ffffff;
+  box-shadow: 4px 4px 0 #ffffff;
+}
+
+body[data-theme="persona5"] .nav-item.active {
+  background: #ffffff;
+  color: #0a0a0a;
+  font-weight: 900;
+  transform: rotate(-1.5deg) skewX(-6deg);
+  box-shadow: 4px 4px 0 #e60012;
+}
+
+/* ==========================================================================
+   4. SONIC THE HEDGEHOG — SUPERSONIC COBALT BLUE & GOLDEN RINGS
+   Supersonic Blue (#0055ff), Golden Ring Yellow (#ffd700), Emerald Hill Checkers
+   ========================================================================== */
+body[data-theme="sonic"] {
+  --bg-base: #04102c;
+  --bg-surface: rgba(7, 29, 77, 0.66);
+  --bg-surface-elevated: rgba(12, 48, 122, 0.78);
+  --bg-surface-hover: rgba(0, 85, 255, 0.35);
+  --text-primary: #ffffff;
+  --text-secondary: #bae6fd;
+  --text-muted: #60a5fa;
+
+  --theme-primary: #0055ff;
+  --theme-secondary: #00b4ff;
+  --theme-accent: #ffd700;
+  --glass-border: rgba(255, 215, 0, 0.38);
+  --glass-border-highlight: #ffd700;
+}
+
+/* Emerald Hill Checkered Accent Strip & Speed Lines */
+body[data-theme="sonic"] #theme-pattern-overlay {
+  background-image:
+    linear-gradient(45deg, rgba(217, 119, 6, 0.14) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(217, 119, 6, 0.14) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(16, 185, 129, 0.12) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(16, 185, 129, 0.12) 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 0 20px, 20px -20px, -20px 0;
+  opacity: 0.45;
+}
+
+/* Golden Ring Emblem & Play Button */
+body[data-theme="sonic"] .btn-play-main,
+body[data-theme="sonic"] .brand-emblem {
+  border: 3px solid #ffd700;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.75), inset 0 0 8px rgba(255, 215, 0, 0.45);
+}
+
+/* Boost Gauge Progress Bar */
+body[data-theme="sonic"] .seek-progress-fill {
+  background: linear-gradient(90deg, #0055ff 0%, #00e5ff 55%, #ffd700 100%);
+  box-shadow: 0 0 14px #00e5ff;
+}
+
+body[data-theme="sonic"] .hero-hud-tag,
+body[data-theme="sonic"] .badge-pill {
+  transform: skewX(-12deg);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+/* ==========================================================================
+   5. HATSUNE MIKU — CV01 VOCALOID CYBER-TEAL & ELECTRIC MAGENTA
+   Cyber-Teal (#39c5bb), Electric Magenta (#ff2a85), Matrix Grid & "01" Mark
+   ========================================================================== */
+body[data-theme="miku"] {
+  --bg-base: #070d12;
+  --bg-surface: rgba(13, 24, 33, 0.68);
+  --bg-surface-elevated: rgba(20, 38, 50, 0.78);
+  --bg-surface-hover: rgba(57, 197, 187, 0.22);
+  --text-primary: #f0fdfa;
+  --text-secondary: #99f6e4;
+  --text-muted: #5eead4;
+
+  --theme-primary: #39c5bb;
+  --theme-secondary: #00f5d4;
+  --theme-accent: #ff2a85;
+  --glass-border: rgba(57, 197, 187, 0.35);
+  --glass-border-highlight: #ff2a85;
+}
+
+/* Synthesizer Matrix Grid Background */
+body[data-theme="miku"] #theme-pattern-overlay {
+  background-image:
+    linear-gradient(rgba(57, 197, 187, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 197, 187, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.65;
+}
+
+/* Iconic Red "01" Shoulder Tattoo Watermark on Main Stage */
+body[data-theme="miku"] .hero-banner::after {
+  content: "01";
+  position: absolute;
+  right: 26px;
+  bottom: -14px;
+  font-family: var(--font-display);
+  font-size: 110px;
+  font-weight: 900;
+  color: rgba(255, 42, 133, 0.22);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+}
+
+body[data-theme="miku"] .seek-progress-fill {
+  background: linear-gradient(90deg, #39c5bb 0%, #00f5d4 70%, #ff2a85 100%);
+  box-shadow: 0 0 12px #39c5bb;
+}
+
+/* ==========================================================================
+   6. GODZILLA — KING OF THE MONSTERS (CHERENKOV ATOMIC BREATH & MONARCH HUD)
+   Kaiju Dorsal Obsidian (#0b0f14), Cherenkov Neon Blue (#00f0ff), Monarch Amber
+   ========================================================================== */
+body[data-theme="godzilla"] {
+  --bg-base: #06090d;
+  --bg-surface: rgba(11, 16, 23, 0.76);
+  --bg-surface-elevated: rgba(17, 26, 38, 0.85);
+  --bg-surface-hover: rgba(0, 240, 255, 0.18);
+  --text-primary: #ecfeff;
+  --text-secondary: #67e8f9;
+  --text-muted: #94a3b8;
+
+  --theme-primary: #0284c7;
+  --theme-secondary: #00f0ff;
+  --theme-accent: #f59e0b;
+  --glass-border: rgba(0, 240, 255, 0.32);
+  --glass-border-highlight: #00f0ff;
+}
+
+body[data-theme="godzilla"] #theme-pattern-overlay {
+  background:
+    radial-gradient(circle at 50% 90%, rgba(0, 240, 255, 0.25) 0%, transparent 55%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(245, 158, 11, 0.04) 0px,
+      rgba(245, 158, 11, 0.04) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  opacity: 0.75;
+}
+
+/* Cherenkov Radiation Pulse on Player Bar & Active Stage */
+body[data-theme="godzilla"] #player-bar,
+body[data-theme="godzilla"] .stage-showcase-card {
+  box-shadow: 0 0 28px rgba(0, 240, 255, 0.32), inset 0 0 18px rgba(0, 240, 255, 0.14);
+}
+
+body[data-theme="godzilla"] .seek-progress-fill {
+  background: linear-gradient(90deg, #0369a1 0%, #00f0ff 80%, #ffffff 100%);
+  box-shadow: 0 0 16px #00f0ff;
+}
+
+/* ==========================================================================
+   7. AGNES TACHYON — UMA MUSUME (MAD SCIENTIST BIOLUMINESCENT LAB UI)
+   Lab-Coat Crisp Slate, Bioluminescent Experimental Lime (#39ff14), Amber Tubes
+   ========================================================================== */
+body[data-theme="tachyon"] {
+  --bg-base: #07110d;
+  --bg-surface: rgba(14, 29, 23, 0.68);
+  --bg-surface-elevated: rgba(20, 44, 34, 0.78);
+  --bg-surface-hover: rgba(57, 255, 20, 0.16);
+  --text-primary: #f8fafc;
+  --text-secondary: #a7f3d0;
+  --text-muted: #6ee7b7;
+
+  --theme-primary: #10b981;
+  --theme-secondary: #39ff14;
+  --theme-accent: #f59e0b;
+  --glass-border: rgba(57, 255, 20, 0.32);
+  --glass-border-highlight: rgba(245, 158, 11, 0.65);
+}
+
+/* Hexagonal Molecular Grid Overlay & Lab Telemetry */
+body[data-theme="tachyon"] #theme-pattern-overlay {
+  background-image:
+    radial-gradient(circle at center, rgba(57, 255, 20, 0.18) 1.5px, transparent 1.5px),
+    radial-gradient(circle at center, rgba(245, 158, 11, 0.14) 1.5px, transparent 1.5px);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
+  opacity: 0.7;
+}
+
+body[data-theme="tachyon"] #left-sidebar,
+body[data-theme="tachyon"] #right-panel {
+  border-top: 2px solid rgba(248, 250, 252, 0.6);
+}
+
+body[data-theme="tachyon"] .hero-banner::after {
+  content: "c² < v² // TACHYON FACTOR";
+  position: absolute;
+  right: 22px;
+  bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(57, 255, 20, 0.28);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+body[data-theme="tachyon"] .seek-progress-fill {
+  background: linear-gradient(90deg, #10b981 0%, #39ff14 65%, #f59e0b 100%);
+  box-shadow: 0 0 14px rgba(57, 255, 20, 0.65);
+}

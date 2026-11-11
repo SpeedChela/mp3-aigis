@@ -1,0 +1,4 @@
+# MP3-Aigis funciona al 100% con la librería estándar de Python 3.10+ (cero dependencias obligatorias).
+# Paquetes opcionales para aceleración HTTP/2, monitoreo de recursos y empaquetado de escritorio:
+httpx>=0.27.0
+psutil>=5.9.0

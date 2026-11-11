@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Runtime SQLite WAL databases & local test downloads
+data/*.db
+data/*.db-shm
+data/*.db-wal
+downloads/*.wav
+downloads/*.mp3
+downloads/*.json
+
+# Build artifacts
+build/
+dist/
+*.spec
+platforms/android/android/
+platforms/android/node_modules/
+platforms/android/package-lock.json

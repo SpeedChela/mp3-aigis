@@ -1,0 +1,19 @@
+{
+  "name": "MP3-Aigis // Reproductor Híbrido YTMusic & Spotify",
+  "short_name": "MP3-Aigis",
+  "description": "Reproductor ligero multiplataforma con motor YouTube Music InnerTube, AdBlock automático, Liquid Glass y 7 temas especiales.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#38bdf8",
+  "orientation": "any",
+  "categories": ["music", "entertainment", "multimedia"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%230b132b'/%3E%3Ccircle cx='64' cy='64' r='44' fill='none' stroke='%2338bdf8' stroke-width='6'/%3E%3Cpolygon points='52,44 88,64 52,84' fill='%23f59e0b'/%3E%3C/svg%3E",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
