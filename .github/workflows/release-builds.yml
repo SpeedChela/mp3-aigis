@@ -233,48 +233,37 @@ jobs:
           cd release-assets
           sha256sum * > SHA256SUMS.txt
           cat << 'EOF' > RELEASE_NOTES.md
-          # 🎧 MP3-Aigis v0.1.0 — Instala Fácil (Sin Comandos ni Python)
+          # MP3-Aigis 0.1.0
 
-          > **Descarga, instala con doble clic y úsalo al instante.** No necesitas instalar Python ni abrir la terminal. Incluye todo el motor **YouTube Music (InnerTube)**, **AdBlock + SponsorBlock automático**, **Playlists Offline-First**, **Ecualizador Inteligente de 10 Bandas**, **Perfiles Aislados / Cross-Device Handoff** y **7 Temas con Liquid Glass**.
+          Primera versión pública de **MP3-Aigis**, un cliente ligero de audio para YouTube Music con diseño híbrido inspirado en Spotify y YT Music. Los instalables de esta versión están listos para usar: no requieren instalar Python ni configurar nada por terminal.
 
-          ---
+          ## Descargas
 
-          ## 🚀 Descargas Directas (Instalación en 1 Clic)
+          | Plataforma | Paquete | Instrucciones |
+          |---|---|---|
+          | **Fedora Linux** | `mp3-aigis-0.1.0-1.fedora.x86_64.rpm` | Abrir con el gestor de software habitual o `sudo dnf install ./archivo.rpm` |
+          | **Linux (Universal)** | `MP3-Aigis-0.1.0-Linux-x86_64.bin` | Dar permisos de ejecución (`chmod +x`) y abrir |
+          | **Windows (Instalador)** | `MP3-Aigis-Setup-0.1.0-x64.exe` | Asistente de instalación estándar para Windows 10 y 11 |
+          | **Windows (Portátil)** | `MP3-Aigis-0.1.0-Portatil-x64.zip` | Descomprimir en cualquier carpeta o memoria USB y abrir `MP3-Aigis.exe` |
+          | **Windows (Directo)** | `MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe` | Binario único ejecutable sin instalación previa |
+          | **Android** | `MP3-Aigis-0.1.0-Android.apk` | Instalar el paquete APK directamente en el dispositivo |
 
-          | Sistema Operativo | Archivo Descargable | Cómo Usarlo (Cero Comandos) |
-          | :--- | :--- | :--- |
-          | 🎩 **Fedora Linux (Instalador `.rpm`)** | **`mp3-aigis-0.1.0-1.fedora.x86_64.rpm`** | Haz **doble clic** sobre el archivo `.rpm` para instalarlo con el Centro de Software de Fedora y ábrelo desde tu menú de aplicaciones. |
-          | 🐧 **Linux (Ejecutable Directo)** | **`MP3-Aigis-0.1.0-Linux-x86_64.bin`** | Ejecutable autónomo de un solo archivo con todo incluido. |
-          | 🪟 **Windows (Instalador Asistente `.exe`)** | **`MP3-Aigis-Setup-0.1.0-x64.exe`** | Asistente gráfico (*Siguiente → Instalar*). Crea acceso directo en tu Escritorio y Menú Inicio. |
-          | ⚡ **Windows (Ejecutable Directo `.exe`)** | **`MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe`** | Descárgalo y haz **doble clic** para abrir MP3-Aigis inmediatamente sin instalar nada. |
-          | 🧳 **Windows (Versión Portátil USB `.zip`)** | **`MP3-Aigis-0.1.0-Portatil-x64.zip`** | Descomprime la carpeta en tu USB o PC y abre `MP3-Aigis.exe` (guarda tus datos dentro de la misma carpeta). |
-          | 🤖 **Android (Instalador `.apk`)** | **`MP3-Aigis-0.1.0-Android.apk`** | Descarga el archivo `.apk` en tu teléfono Android y tócalo para instalar la app. |
+          ## Novedades y características de la versión
 
-          ---
+          - **Bloqueo automático de publicidad**: el reproductor detecta si la sesión vinculada cuenta con suscripción Premium o no; en caso de ser gratuita, activa el filtrado de anuncios y segmentos patrocinados de forma automática.
+          - **Reproducción offline y tolerancia a fallos de red**: las playlists y la cola se guardan localmente para que la música no se corte si la conexión es inestable.
+          - **Alternancia entre audio y video**: cambio instantáneo entre la versión en audio y el video oficial de cada tema manteniendo la posición exacta de reproducción.
+          - **Ecualizador de 10 bandas y modo inteligente**: incluye ecualización manual con presets y un modo adaptativo que ajusta la curva según el género musical del tema actual.
+          - **Perfiles y continuidad entre dispositivos**: soporte para sesiones privadas o modo invitado (para prestar la cuenta sin alterar las recomendaciones personales) y función para retomar la reproducción en otro equipo.
+          - **Temas visuales**: interfaz con efecto translúcido y temas dedicados (Aigis, Persona 3 Reload, Persona 5, Sonic, Hatsune Miku, Godzilla y Agnes Tachyon).
 
-          ## ✨ Qué Incluye MP3-Aigis v0.1.0
-
-          - 🛡️ **Sesión de Google Ligera + Auto-AdBlock**: Detecta si tu cuenta es *Gratuita* (activando automáticamente el bloqueo de anuncios y SponsorBlock) o *YouTube Music Premium*.
-          - 📡 **Playlists Anti-Cortes de Red (Offline-First)**: Si falla el Wi-Fi o los datos móviles, tus listas de reproducción nunca se traban ni desaparecen.
-          - 🎬 **Cambio Instantáneo Canción ↔ Video**: Alterna entre pista de audio y video oficial sin perder el segundo exacto (`0ms drift`).
-          - 🎚️ **Ecualizador Inteligente Adaptativo (Smart Auto-EQ — Opcional)**: Ajusta automáticamente las 10 bandas según el género y BPM de la canción que estás escuchando, o úsalo en modo manual.
-          - 👥 **Perfiles Aislados y Continuidad entre Dispositivos (*Handoff*)**:
-            - Continúa lo que estabas escuchando de tu PC a tu Android en el segundo exacto.
-            - **Modo Invitado / Cuenta Prestada (*Online Aislado*)**: Presta tu cuenta sin que las canciones reproducidas se mezclen con tu algoritmo ni tu historial.
-            - **Sesión Privada (*Offline Puro*)**: Sesión desconectada 100% privada.
-          - 🎨 **Interfaz Híbrida (Spotify + YTMusic) + Liquid Glass + 7 Temas**:
-            - **Aigis (Persona 3)** • **Persona 3 Reload** • **Persona 5 Phone UI** • **Sonic the Hedgehog** • **Hatsune Miku CV01** • **Godzilla** • **Agnes Tachyon (Uma Musume)**.
-
-          ---
-
-          ## 🔐 Sumas de Verificación (SHA-256)
-          Archivo adjunto: `SHA256SUMS.txt`
+          Las sumas de verificación SHA-256 de todos los binarios están disponibles en el archivo adjunto `SHA256SUMS.txt`.
           EOF
       - name: Create or Update GitHub Release v0.1.0
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.1.0' }}
-          name: "🎧 MP3-Aigis v0.1.0 — Instala Fácil (Fedora RPM, Windows Setup EXE & Portable, Android APK)"
+          name: "MP3-Aigis 0.1.0"
           body_path: release-assets/RELEASE_NOTES.md
           draft: false
           prerelease: false
