@@ -194,12 +194,15 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+          java-version: '17'
       - name: Build Android APK via Capacitor
         working-directory: platforms/android
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
+          # Aceptar licencias de Android SDK preinstalado en el runner
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
           npm init -y
           npm install @capacitor/core@^6.0.0 @capacitor/cli@^6.0.0 @capacitor/android@^6.0.0
           npx cap add android
