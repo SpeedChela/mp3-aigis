@@ -18,10 +18,11 @@ import threading
 import time
 from typing import Any, Dict, List, Optional
 
+from backend import get_default_download_dir
 from backend.ytmusic_engine import YTMusicInnerTubeEngine
 
 
-DEFAULT_DOWNLOAD_DIR = "/home/speedchela/Proyectos/mp3-aigis/downloads"
+DEFAULT_DOWNLOAD_DIR = get_default_download_dir()
 
 
 class SmartDownloadManager:

@@ -1,10 +1,7 @@
-name: MP3-Aigis Multi-Platform Release & Installers
+name: MP3-Aigis v0.1.0 One-Click Installers (Fedora RPM, Windows Setup EXE, Android APK)
 
 on:
   push:
-    branches:
-      - main
-      - master
     tags:
       - 'v*'
   workflow_dispatch:
@@ -14,7 +11,7 @@ permissions:
 
 jobs:
   verify-core:
-    name: Bug-Hunter & Token-Minimizer QA Suite
+    name: QA Verification Suite
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,25 +24,8 @@ jobs:
           python3 tests/test_suite.py
           python3 run.py --check
 
-  build-pwa-web:
-    name: Build 1. Web & PWA Bundle
-    needs: verify-core
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Package Web & PWA Release Bundle
-        run: |
-          mkdir -p dist-pwa/mp3-aigis-pwa
-          cp -r web backend run.py requirements.txt README.md LICENSE dist-pwa/mp3-aigis-pwa/
-          cd dist-pwa
-          zip -r MP3-Aigis-Web-PWA-v1.0.0.zip mp3-aigis-pwa
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pkg-web-pwa
-          path: dist-pwa/MP3-Aigis-Web-PWA-v1.0.0.zip
-
-  build-linux:
-    name: Build 2. Linux Executable & Installer
+  build-fedora-linux:
+    name: Build 1. Fedora Linux (.rpm 1-Click Installer & Standalone App)
     needs: verify-core
     runs-on: ubuntu-latest
     steps:
@@ -53,50 +33,77 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install PyInstaller
-        run: pip install pyinstaller
-      - name: Build Linux Standalone Binary & Desktop Installer
+      - name: Install PyInstaller & RPM Packaging Tools
         run: |
-          pyinstaller --noconfirm --onefile --name mp3-aigis-linux-x86_64 \
+          sudo apt-get update
+          sudo apt-get install -y rpm ruby ruby-dev build-essential
+          sudo gem install --no-document fpm
+          pip install pyinstaller
+      - name: Build Standalone Binary & Native Fedora .rpm Package
+        run: |
+          # 1. Compile self-contained Linux binary (includes Python runtime + web + backend)
+          pyinstaller --noconfirm --onefile --name mp3-aigis \
             --add-data "web:web" \
             --add-data "backend:backend" \
             run.py
-          mkdir -p release-linux/MP3-Aigis-Linux-x86_64
-          cp dist/mp3-aigis-linux-x86_64 release-linux/MP3-Aigis-Linux-x86_64/mp3-aigis
-          cp README.md LICENSE release-linux/MP3-Aigis-Linux-x86_64/
-          cat << 'EOF' > release-linux/MP3-Aigis-Linux-x86_64/install-desktop.sh
-          #!/usr/bin/env bash
-          set -e
-          INSTALL_DIR="$HOME/.local/share/mp3-aigis"
-          BIN_DIR="$HOME/.local/bin"
-          mkdir -p "$INSTALL_DIR" "$BIN_DIR" "$HOME/.local/share/applications"
-          cp ./mp3-aigis "$INSTALL_DIR/mp3-aigis"
-          chmod +x "$INSTALL_DIR/mp3-aigis"
-          ln -sf "$INSTALL_DIR/mp3-aigis" "$BIN_DIR/mp3-aigis"
-          cat << DESKTOP > "$HOME/.local/share/applications/mp3-aigis.desktop"
+
+          mkdir -p release-fedora
+          cp dist/mp3-aigis release-fedora/MP3-Aigis-0.1.0-Linux-x86_64.bin
+          chmod +x release-fedora/MP3-Aigis-0.1.0-Linux-x86_64.bin
+
+          # 2. Prepare rootfs for Fedora .rpm 1-click graphical installer
+          mkdir -p rpm-root/opt/mp3-aigis
+          mkdir -p rpm-root/usr/bin
+          mkdir -p rpm-root/usr/share/applications
+          mkdir -p rpm-root/usr/share/icons/hicolor/scalable/apps
+
+          cp dist/mp3-aigis rpm-root/opt/mp3-aigis/mp3-aigis
+          chmod 755 rpm-root/opt/mp3-aigis/mp3-aigis
+          ln -s /opt/mp3-aigis/mp3-aigis rpm-root/usr/bin/mp3-aigis
+
+          cat << 'ICON' > rpm-root/usr/share/icons/hicolor/scalable/apps/mp3-aigis.svg
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+            <rect width="128" height="128" rx="28" fill="#0b132b"/>
+            <circle cx="64" cy="64" r="44" fill="none" stroke="#38bdf8" stroke-width="6"/>
+            <polygon points="52,44 88,64 52,84" fill="#f59e0b"/>
+          </svg>
+          ICON
+
+          cat << 'DESKTOP' > rpm-root/usr/share/applications/mp3-aigis.desktop
           [Desktop Entry]
+          Version=1.0
           Name=MP3-Aigis
-          Comment=Reproductor Híbrido YTMusic & Spotify con Liquid Glass
-          Exec=$INSTALL_DIR/mp3-aigis --desktop
+          GenericName=Reproductor de Música YTMusic & Spotify
+          Comment=Reproductor Híbrido YTMusic & Spotify con Liquid Glass, AdBlock y 7 Temas
+          Exec=/opt/mp3-aigis/mp3-aigis --desktop
+          Icon=mp3-aigis
           Terminal=false
           Type=Application
-          Categories=AudioVideo;Audio;Player;
+          Categories=AudioVideo;Audio;Player;Music;
+          StartupNotify=true
           DESKTOP
-          echo "[OK] MP3-Aigis instalado en tu menú de aplicaciones Linux."
-          EOF
-          chmod +x release-linux/MP3-Aigis-Linux-x86_64/install-desktop.sh
-          cp dist/mp3-aigis-linux-x86_64 release-linux/MP3-Aigis-Linux-x86_64.bin
-          cd release-linux
-          tar -czvf MP3-Aigis-Linux-Installer-x86_64.tar.gz MP3-Aigis-Linux-x86_64
+
+          # 3. Package into native Fedora RPM (mp3-aigis-0.1.0-1.x86_64.rpm)
+          fpm -s dir -t rpm \
+            -n mp3-aigis \
+            -v 0.1.0 \
+            --iteration 1 \
+            --architecture x86_64 \
+            --license "MIT" \
+            --description "MP3-Aigis: Reproductor Hibrido YTMusic y Spotify con Liquid Glass, AdBlock y 7 Temas (Sin requerir Python)" \
+            --url "https://github.com/SpeedChela/mp3-aigis" \
+            -C rpm-root \
+            -p release-fedora/mp3-aigis-0.1.0-1.fedora.x86_64.rpm \
+            opt usr
       - uses: actions/upload-artifact@v4
         with:
-          name: pkg-linux
+          name: pkg-fedora-linux
           path: |
-            release-linux/MP3-Aigis-Linux-x86_64.bin
-            release-linux/MP3-Aigis-Linux-Installer-x86_64.tar.gz
+            release-fedora/mp3-aigis-0.1.0-1.fedora.x86_64.rpm
+            release-fedora/MP3-Aigis-0.1.0-Linux-x86_64.bin
 
   build-windows:
-    name: Build 3 & 4. Windows Ejecutable (.exe) & Windows Portátil (.zip)
+    name: Build 2. Windows Setup Wizard (.exe), Direct (.exe) & Portable (.zip)
     needs: verify-core
     runs-on: windows-latest
     steps:
@@ -106,39 +113,77 @@ jobs:
           python-version: '3.12'
       - name: Install PyInstaller
         run: pip install pyinstaller
-      - name: Build Windows Standalone Executable (.exe) & Portable Package (.zip)
+      - name: Build Windows Standalone EXE, Portable ZIP & Graphical Inno Setup Wizard
         shell: bash
         run: |
           mkdir -p release-windows
-          # 1. Windows Single-File Ejecutable Directo (.exe)
-          pyinstaller --noconfirm --onefile --windowed --name "MP3-Aigis-Windows-x64" \
-            --add-data "web;web" \
-            --add-data "backend;backend" \
-            run.py
-          cp dist/MP3-Aigis-Windows-x64.exe release-windows/MP3-Aigis-Windows-Ejecutable-x64.exe
 
-          # 2. Windows Portátil (Zero-Install Portable Folder con modo portable aislado)
-          pyinstaller --noconfirm --onedir --windowed --name "MP3-Aigis-Portable" \
+          # 1. Single-file Click-and-Run Executable (No Python needed)
+          pyinstaller --noconfirm --onefile --windowed --name "MP3-Aigis-0.1.0-x64" \
             --add-data "web;web" \
             --add-data "backend;backend" \
             run.py
-          cp README.md LICENSE dist/MP3-Aigis-Portable/
-          cat << 'EOF' > dist/MP3-Aigis-Portable/Iniciar-MP3-Aigis-Portatil.bat
-          @echo off
-          title MP3-Aigis Portable
-          start "" "%~dp0MP3-Aigis-Portable.exe" --desktop
-          EOF
+          cp dist/MP3-Aigis-0.1.0-x64.exe release-windows/MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe
+
+          # 2. Directory build for Windows Setup Wizard & Portable Edition
+          pyinstaller --noconfirm --onedir --windowed --name "MP3-Aigis" \
+            --add-data "web;web" \
+            --add-data "backend;backend" \
+            run.py
+          cp README.md LICENSE dist/MP3-Aigis/
+
+          # 3. Create Graphical Windows Installer (MP3-Aigis-Setup-0.1.0-x64.exe) via Inno Setup
+          cat << 'ISS' > installer.iss
+          [Setup]
+          AppId={{9F9240A9-4616-4F75-BEB6-8F8D5E8DFF4A}
+          AppName=MP3-Aigis
+          AppVersion=0.1.0
+          AppPublisher=SpeedChela
+          AppPublisherURL=https://github.com/SpeedChela/mp3-aigis
+          DefaultDirName={autopf}\MP3-Aigis
+          DefaultGroupName=MP3-Aigis
+          DisableProgramGroupPage=yes
+          PrivilegesRequired=lowest
+          OutputDir=release-windows
+          OutputBaseFilename=MP3-Aigis-Setup-0.1.0-x64
+          Compression=lzma2
+          SolidCompression=yes
+          WizardStyle=modern
+
+          [Languages]
+          Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+
+          [Tasks]
+          Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+          [Files]
+          Source: "dist\MP3-Aigis\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+          [Icons]
+          Name: "{autoprograms}\MP3-Aigis"; Filename: "{app}\MP3-Aigis.exe"; Parameters: "--desktop"
+          Name: "{autodesktop}\MP3-Aigis"; Filename: "{app}\MP3-Aigis.exe"; Parameters: "--desktop"; Tasks: desktopicon
+
+          [Run]
+          Filename: "{app}\MP3-Aigis.exe"; Parameters: "--desktop"; Description: "{cm:LaunchProgram,MP3-Aigis}"; Flags: nowait postinstall skipifsilent
+          ISS
+
+          iscc installer.iss
+
+          # 4. Create Zero-Install Windows Portable ZIP (with portable.flag)
+          cp -r dist/MP3-Aigis dist/MP3-Aigis-Portable-0.1.0
+          touch dist/MP3-Aigis-Portable-0.1.0/portable.flag
           cd dist
-          7z a ../release-windows/MP3-Aigis-Windows-Portatil-x64.zip MP3-Aigis-Portable
+          7z a ../release-windows/MP3-Aigis-0.1.0-Portatil-x64.zip MP3-Aigis-Portable-0.1.0
       - uses: actions/upload-artifact@v4
         with:
           name: pkg-windows
           path: |
-            release-windows/MP3-Aigis-Windows-Ejecutable-x64.exe
-            release-windows/MP3-Aigis-Windows-Portatil-x64.zip
+            release-windows/MP3-Aigis-Setup-0.1.0-x64.exe
+            release-windows/MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe
+            release-windows/MP3-Aigis-0.1.0-Portatil-x64.zip
 
   build-android-apk:
-    name: Build 5. Android APK
+    name: Build 3. Android APK (1-Click Install)
     needs: verify-core
     runs-on: ubuntu-latest
     steps:
@@ -163,15 +208,15 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
           mkdir -p ../../../release-android
-          cp app/build/outputs/apk/debug/app-debug.apk ../../../release-android/MP3-Aigis-Android-v1.0.0.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../../../release-android/MP3-Aigis-0.1.0-Android.apk
       - uses: actions/upload-artifact@v4
         with:
           name: pkg-android
-          path: release-android/MP3-Aigis-Android-v1.0.0.apk
+          path: release-android/MP3-Aigis-0.1.0-Android.apk
 
   publish-release:
-    name: Publish Official GitHub Release
-    needs: [build-pwa-web, build-linux, build-windows, build-android-apk]
+    name: Publish Official v0.1.0 Release
+    needs: [build-fedora-linux, build-windows, build-android-apk]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -180,68 +225,61 @@ jobs:
         with:
           path: release-assets
           merge-multiple: true
-      - name: Generate SHA-256 Checksums & Release Notes
+      - name: Generate SHA-256 Checksums & Release Presentation
         run: |
           cd release-assets
           sha256sum * > SHA256SUMS.txt
           cat << 'EOF' > RELEASE_NOTES.md
-          # 🎧 MP3-Aigis v1.0.0 — Liquid Glass YT Music & Spotify Hybrid Workstation
+          # 🎧 MP3-Aigis v0.1.0 — Instala Fácil (Sin Comandos ni Python)
 
-          > **Reproductor multiplataforma ultraligero (~30 MB RAM • 95.1% más ligero que Electron)** que utiliza el motor y algoritmo de **YouTube Music (InnerTube)** con **AdBlock + SponsorBlock automático**, **Playlists Offline-First anti-cortes de red**, **Descargas Multi-Chunk SHA-256**, **Ecualizador Inteligente de 10 Bandas** y **7 Temas Especiales con Liquid Glass**.
+          > **Descarga, instala con doble clic y úsalo al instante.** No necesitas instalar Python ni abrir la terminal. Incluye todo el motor **YouTube Music (InnerTube)**, **AdBlock + SponsorBlock automático**, **Playlists Offline-First**, **Ecualizador Inteligente de 10 Bandas**, **Perfiles Aislados / Cross-Device Handoff** y **7 Temas con Liquid Glass**.
 
           ---
 
-          ## 📦 Descargas por Plataforma (Instalables Oficiales)
+          ## 🚀 Descargas Directas (Instalación en 1 Clic)
 
-          | Plataforma | Archivo | Descripción |
+          | Sistema Operativo | Archivo Descargable | Cómo Usarlo (Cero Comandos) |
           | :--- | :--- | :--- |
-          | 🪟 **Windows (Ejecutable Directo)** | `MP3-Aigis-Windows-Ejecutable-x64.exe` | Ejecutable autónomo de un solo archivo para Windows 10/11 (64-bit). |
-          | 🧳 **Windows (Versión Portátil)** | `MP3-Aigis-Windows-Portatil-x64.zip` | Edición *Zero-Install* para llevar en USB o carpeta sin instalar nada. |
-          | 🐧 **Linux (Binario + Instalador Desktop)** | `MP3-Aigis-Linux-Installer-x86_64.tar.gz` / `.bin` | Ejecutable nativo `x86_64` + script `install-desktop.sh` para integrar en el menú del sistema. |
-          | 🤖 **Android (APK Instalable)** | `MP3-Aigis-Android-v1.0.0.apk` | Paquete APK listo para instalar en dispositivos Android. |
-          | 🌐 **Web & PWA (Auto-alojable)** | `MP3-Aigis-Web-PWA-v1.0.0.zip` | Aplicación Web Progresiva instalable en cualquier navegador de escritorio o móvil. |
+          | 🎩 **Fedora Linux (Instalador `.rpm`)** | **`mp3-aigis-0.1.0-1.fedora.x86_64.rpm`** | Haz **doble clic** sobre el archivo `.rpm` para instalarlo con el Centro de Software de Fedora y ábrelo desde tu menú de aplicaciones. |
+          | 🐧 **Linux (Ejecutable Directo)** | **`MP3-Aigis-0.1.0-Linux-x86_64.bin`** | Ejecutable autónomo de un solo archivo con todo incluido. |
+          | 🪟 **Windows (Instalador Asistente `.exe`)** | **`MP3-Aigis-Setup-0.1.0-x64.exe`** | Asistente gráfico (*Siguiente → Instalar*). Crea acceso directo en tu Escritorio y Menú Inicio. |
+          | ⚡ **Windows (Ejecutable Directo `.exe`)** | **`MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe`** | Descárgalo y haz **doble clic** para abrir MP3-Aigis inmediatamente sin instalar nada. |
+          | 🧳 **Windows (Versión Portátil USB `.zip`)** | **`MP3-Aigis-0.1.0-Portatil-x64.zip`** | Descomprime la carpeta en tu USB o PC y abre `MP3-Aigis.exe` (guarda tus datos dentro de la misma carpeta). |
+          | 🤖 **Android (Instalador `.apk`)** | **`MP3-Aigis-0.1.0-Android.apk`** | Descarga el archivo `.apk` en tu teléfono Android y tócalo para instalar la app. |
 
           ---
 
-          ## ✨ Características Principales de Esta Versión
+          ## ✨ Qué Incluye MP3-Aigis v0.1.0
 
-          - 🛡️ **Detección Inteligente de Sesión Google + Auto-AdBlock**: Identifica si tu cuenta es *Gratuita* (activando automáticamente el filtro de anuncios y SponsorBlock sin pedir permisos intrusivos) o *YouTube Music Premium* (streams directos de alto bitrate).
-          - 📡 **Resiliencia Offline-First en Playlists**: Doble caché (`SQLite WAL` + `IndexedDB`) con cola de sincronización diferida para que las playlists nunca fallen cuando se cae el Wi-Fi o los datos móviles.
-          - ⚡ **Conmutación Instantánea Canción (ATV) ↔ Video (OMV)**: Cambia entre pista de audio y video oficial conservando el milisegundo exacto (`0ms drift`).
-          - 🎚️ **Estudio de Audio DSP de 10 Bandas + Smart Auto-EQ (Modo Opcional)**: Ecualizador paramétrico/gráfico (`31Hz–16kHz`), Preamp, Sub-Bass Boost, Normalización `-14 LUFS` y modo **Smart Auto-EQ** que adapta la curva automáticamente según el género y BPM de lo que escuchas.
-          - 👥 **Sistema Multi-Perfil, Sesiones Prestadas y Cross-Device Handoff**:
-            - **Continuar en Otro Dispositivo (*Handoff*)**: Retoma la misma canción y segundo exacto al cambiar de PC a Android o Web.
-            - **Modo Invitado / Cuenta Prestada (*Online Aislado*)**: Presta tu cuenta sin que las canciones escuchadas contaminen tu algoritmo ni tus recomendaciones principales.
-            - **Sesión Privada (*Offline Puro*)**: Reproducción aislada 100% local sin conexión.
-          - 🎨 **4 Modos de Interfaz + Liquid Glass + Color Dinámico de Portada**:
-            - Alterna en vivo entre **Híbrido (Spotify + YTMusic)**, **YT Music Mejorado**, **Spotify Clásico** y **Custom Modular** (con **Modo Eco** de ultra bajo consumo).
-          - 🎭 **7 Temas Especiales Incluidos**:
-            1. **Aigis (Persona 3)** *(con Modo Orgia / Overdrive)*
-            2. **Persona 3 Reload** *(Dark Hour & Tartarus Cyan)*
-            3. **Persona 5 Phone IM UI** *(Interfaz de teléfono de Joker / Phantom Thieves)*
-            4. **Sonic the Hedgehog** *(Supersonic Cobalt & Boost Gauge)*
-            5. **Hatsune Miku CV01** *(Vocaloid Cyber-Teal & Matrix 01)*
-            6. **Godzilla** *(Cherenkov Atomic Blue & Monarch Radar)*
-            7. **Agnes Tachyon (Uma Musume)** *(Bioluminescent Lab Green & Tachyon Factor HUD)*
+          - 🛡️ **Sesión de Google Ligera + Auto-AdBlock**: Detecta si tu cuenta es *Gratuita* (activando automáticamente el bloqueo de anuncios y SponsorBlock) o *YouTube Music Premium*.
+          - 📡 **Playlists Anti-Cortes de Red (Offline-First)**: Si falla el Wi-Fi o los datos móviles, tus listas de reproducción nunca se traban ni desaparecen.
+          - 🎬 **Cambio Instantáneo Canción ↔ Video**: Alterna entre pista de audio y video oficial sin perder el segundo exacto (`0ms drift`).
+          - 🎚️ **Ecualizador Inteligente Adaptativo (Smart Auto-EQ — Opcional)**: Ajusta automáticamente las 10 bandas según el género y BPM de la canción que estás escuchando, o úsalo en modo manual.
+          - 👥 **Perfiles Aislados y Continuidad entre Dispositivos (*Handoff*)**:
+            - Continúa lo que estabas escuchando de tu PC a tu Android en el segundo exacto.
+            - **Modo Invitado / Cuenta Prestada (*Online Aislado*)**: Presta tu cuenta sin que las canciones reproducidas se mezclen con tu algoritmo ni tu historial.
+            - **Sesión Privada (*Offline Puro*)**: Sesión desconectada 100% privada.
+          - 🎨 **Interfaz Híbrida (Spotify + YTMusic) + Liquid Glass + 7 Temas**:
+            - **Aigis (Persona 3)** • **Persona 3 Reload** • **Persona 5 Phone UI** • **Sonic the Hedgehog** • **Hatsune Miku CV01** • **Godzilla** • **Agnes Tachyon (Uma Musume)**.
 
           ---
 
-          ## 🔐 Verificación de Integridad (SHA-256)
-          Consulta el archivo adjunto `SHA256SUMS.txt` para comprobar la firma criptográfica de cada instalador.
+          ## 🔐 Sumas de Verificación (SHA-256)
+          Archivo adjunto: `SHA256SUMS.txt`
           EOF
-      - name: Create or Update GitHub Release
+      - name: Create or Update GitHub Release v0.1.0
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
-          name: "🎧 MP3-Aigis v1.0.0 — Multi-Platform Release (Windows, Linux, Android APK, PWA)"
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.1.0' }}
+          name: "🎧 MP3-Aigis v0.1.0 — Instala Fácil (Fedora RPM, Windows Setup EXE & Portable, Android APK)"
           body_path: release-assets/RELEASE_NOTES.md
           draft: false
           prerelease: false
           files: |
-            release-assets/MP3-Aigis-Web-PWA-v1.0.0.zip
-            release-assets/MP3-Aigis-Linux-x86_64.bin
-            release-assets/MP3-Aigis-Linux-Installer-x86_64.tar.gz
-            release-assets/MP3-Aigis-Windows-Ejecutable-x64.exe
-            release-assets/MP3-Aigis-Windows-Portatil-x64.zip
-            release-assets/MP3-Aigis-Android-v1.0.0.apk
+            release-assets/mp3-aigis-0.1.0-1.fedora.x86_64.rpm
+            release-assets/MP3-Aigis-0.1.0-Linux-x86_64.bin
+            release-assets/MP3-Aigis-Setup-0.1.0-x64.exe
+            release-assets/MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe
+            release-assets/MP3-Aigis-0.1.0-Portatil-x64.zip
+            release-assets/MP3-Aigis-0.1.0-Android.apk
             release-assets/SHA256SUMS.txt

@@ -79,9 +79,44 @@ def run_self_check() -> int:
     return 0
 
 
+import socket
+
+
+def find_available_port(host: str, preferred_port: int = 8765) -> int:
+    """Return preferred_port if free, otherwise pick the next available local port."""
+    for p in range(preferred_port, preferred_port + 25):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind((host, p))
+                return p
+            except OSError:
+                continue
+    return preferred_port
+
+
 def launch_desktop_window(url: str) -> None:
-    """Open a lightweight native app-mode window without spawning a heavy Electron runtime."""
-    for bin_name in ("chromium", "chromium-browser", "google-chrome", "brave-browser", "microsoft-edge"):
+    """Open a lightweight native app-mode window on Windows or Fedora/Linux without Electron bloat."""
+    if sys.platform.startswith("win"):
+        win_candidates = [
+            os.path.expandvars(r"%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe"),
+            os.path.expandvars(r"%ProgramFiles%\Microsoft\Edge\Application\msedge.exe"),
+            os.path.expandvars(r"%ProgramFiles%\Google\Chrome\Application\chrome.exe"),
+            os.path.expandvars(r"%LocalAppData%\Google\Chrome\Application\chrome.exe"),
+            os.path.expandvars(r"%ProgramFiles%\BraveSoftware\Brave-Browser\Application\brave.exe"),
+        ]
+        for exe in win_candidates:
+            if os.path.exists(exe):
+                try:
+                    subprocess.Popen(
+                        [exe, f"--app={url}", "--window-size=1360,860"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+                    return
+                except OSError:
+                    pass
+
+    for bin_name in ("chromium", "chromium-browser", "google-chrome", "brave-browser", "microsoft-edge", "vivaldi"):
         exe = shutil.which(bin_name)
         if exe:
             try:
@@ -100,8 +135,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="MP3-Aigis High-Efficiency YouTube Music Client & Engine")
     parser.add_argument("--host", default="127.0.0.1", help="Bind host address (default: 127.0.0.1)")
     parser.add_argument("--port", type=int, default=8765, help="Bind port (default: 8765)")
-    parser.add_argument("--desktop", action="store_true", help="Launch in lightweight native desktop window mode")
-    parser.add_argument("--web", action="store_true", help="Launch web server mode")
+    parser.add_argument("--desktop", action="store_true", help="Launch in lightweight native desktop window mode (default)")
+    parser.add_argument("--web", action="store_true", help="Launch in standard web browser tab")
     parser.add_argument("--no-open", action="store_true", help="Do not automatically open browser/window")
     parser.add_argument("--check", action="store_true", help="Run engine self-diagnostics and exit")
     args = parser.parse_args()
@@ -109,18 +144,20 @@ def main() -> int:
     if args.check:
         return run_self_check()
 
-    url = f"http://{args.host}:{args.port}"
-    if not args.no_open and (args.desktop or args.web):
+    active_port = find_available_port(args.host, args.port)
+    url = f"http://{args.host}:{active_port}"
+    if not args.no_open:
         def _delayed_open() -> None:
             time.sleep(0.4)
-            if args.desktop:
-                launch_desktop_window(url)
-            else:
+            if args.web and not args.desktop:
                 webbrowser.open(url)
+            else:
+                # Default on double-click / no flags: open native frameless Desktop window
+                launch_desktop_window(url)
 
         threading.Thread(target=_delayed_open, daemon=True).start()
 
-    run_server(host=args.host, port=args.port)
+    run_server(host=args.host, port=active_port)
     return 0
 
 

@@ -20,7 +20,10 @@ import uuid
 from typing import Any, Dict, Iterator, List, Optional
 
 
-DEFAULT_DB_PATH = "/home/speedchela/Proyectos/mp3-aigis/data/aigis_cache.db"
+from backend import get_default_db_path
+
+
+DEFAULT_DB_PATH = get_default_db_path()
 
 
 class ProfileSessionManager:

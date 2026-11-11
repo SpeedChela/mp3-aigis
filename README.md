@@ -128,44 +128,33 @@ Antes de iniciar, puedes verificar el motor InnerTube, el escudo AdBlock, la cac
 python3 run.py --check
 ```
 
-### 1. Modo Web / PWA (Multiplataforma)
-Inicia el servidor local de alto rendimiento y abre la aplicación en tu navegador (con soporte de instalación PWA):
+## Guía de Ejecución Multiplataforma
+
+### Instalación Fácil en 1 Clic (Sin Comandos ni Instalar Python — Release `v0.1.0`)
+
+No necesitas abrir la terminal ni tener Python instalado. Solo ve a la sección de [**Releases (`v0.1.0`)**](https://github.com/SpeedChela/mp3-aigis/releases/tag/v0.1.0) y descarga el instalador correspondiente a tu sistema operativo:
+
+| Sistema Operativo | Archivo del Release `v0.1.0` | Cómo Instalar / Abrir (Cero Comandos) |
+| :--- | :--- | :--- |
+| **Fedora Linux** | `mp3-aigis-0.1.0-1.fedora.x86_64.rpm` | Haz **doble clic** sobre el archivo `.rpm` para instalarlo desde el Centro de Software de Fedora y ábrelo desde tu menú de aplicaciones. |
+| **Windows (Instalador Fácil)** | `MP3-Aigis-Setup-0.1.0-x64.exe` | Haz **doble clic**, sigue el asistente (*Siguiente → Instalar*) y abre **MP3-Aigis** desde el ícono creado en tu Escritorio. |
+| **Windows (Ejecutable Directo)** | `MP3-Aigis-0.1.0-Ejecutable-Directo-x64.exe` | Haz **doble clic** para abrir la aplicación al instante sin instalar nada. |
+| **Windows (Portátil USB)** | `MP3-Aigis-0.1.0-Portatil-x64.zip` | Descomprime el `.zip` en cualquier carpeta o USB y haz doble clic en `MP3-Aigis.exe`. |
+| **Android** | `MP3-Aigis-0.1.0-Android.apk` | Descarga el archivo `.apk` en tu dispositivo Android y tócalo para instalar la app. |
+
+---
+
+### Ejecución para Desarrolladores (Desde Código Fuente)
+
+Si deseas modificar el código fuente directamente desde el repositorio:
+
 ```bash
-# Inicia en http://127.0.0.1:8765 y abre el navegador automáticamente
+# Abrir directamente en ventana de aplicación de escritorio
+python3 run.py
+
+# O iniciar en el navegador web
 python3 run.py --web
-
-# O inicia el servidor sin abrir ventana automáticamente (útil para servidores o desarrollo)
-python3 run.py --port 8765 --no-open
 ```
-
-### 2. Linux Desktop
-Ejecuta **MP3-Aigis** en una ventana dedicada sin bordes de navegador (*Chromeless App Mode*) con aceleración GPU para Liquid Glass y WebAudio, consumiendo una fracción mínima de RAM frente a Electron:
-```bash
-# Opción A: Mediante el lanzador unificado
-python3 run.py --desktop
-
-# Opción B: Mediante el lanzador nativo de escritorio
-python3 platforms/desktop/desktop_app.py
-```
-
-### 3. Windows Desktop
-En **Windows 10 / 11**, el lanzador detecta automáticamente Microsoft Edge, Google Chrome o Brave en modo aplicación nativa (`--app`) conectado al motor local:
-```powershell
-# Desde PowerShell o CMD en la raíz del proyecto
-python run.py --desktop
-
-# O ejecutando directamente el lanzador de escritorio
-python platforms\desktop\desktop_app.py
-```
-
-### 4. Compilación del APK para Android
-El directorio `platforms/android/` incluye la configuración de **Capacitor** (`capacitor.config.json`) y el script automatizado `build-apk.sh` para empaquetar toda la interfaz Liquid Glass, los 7 temas y el motor DSP en un APK ligero para Android:
-```bash
-# Requisitos para compilar localmente: Node.js (npx) + Android SDK / Gradle
-bash platforms/android/build-apk.sh
-```
-El archivo instalable se generará en:
-`platforms/android/android/app/build/outputs/apk/debug/app-debug.apk`
 
 ---
 

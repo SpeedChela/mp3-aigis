@@ -23,13 +23,14 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, Optional, Tuple
 
+from backend import get_web_root
 from backend.download_manager import SmartDownloadManager
 from backend.playlist_cache import ResilientPlaylistCache
 from backend.profile_manager import ProfileSessionManager
 from backend.ytmusic_engine import YTMusicInnerTubeEngine
 
 
-WEB_ROOT = "/home/speedchela/Proyectos/mp3-aigis/web"
+WEB_ROOT = get_web_root()
 
 
 class AigisCoreState:

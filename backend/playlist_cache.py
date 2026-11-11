@@ -17,10 +17,11 @@ import time
 import uuid
 from typing import Any, Dict, Iterator, List, Optional
 
+from backend import get_default_db_path
 from backend.ytmusic_engine import CATALOG_TRACKS
 
 
-DEFAULT_DB_PATH = "/home/speedchela/Proyectos/mp3-aigis/data/aigis_cache.db"
+DEFAULT_DB_PATH = get_default_db_path()
 
 
 class ResilientPlaylistCache:
