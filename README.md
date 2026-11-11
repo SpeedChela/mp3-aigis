@@ -21,8 +21,7 @@
    - [Linux Desktop (Nativo Ligero)](#2-linux-desktop)
    - [Windows Desktop](#3-windows-desktop)
    - [Compilación de APK para Android](#4-compilación-del-apk-para-android)
-5. [Agentes Especializados Incluidos en `.agents/`](#-agentes-especializados-incluidos-en-agents)
-6. [Referencia de API REST Local](#-referencia-de-api-rest-local)
+5. [Referencia de API REST Local](#-referencia-de-api-rest-local)
 
 ---
 
@@ -56,10 +55,6 @@ mp3-aigis/
 │   └── android/
 │       ├── capacitor.config.json   # Configuración de contenedor móvil Android
 │       └── build-apk.sh            # Pipeline automatizado para generar el APK
-└── .agents/
-    ├── code-optimizer.md           # Agente especialista en optimización RAM/CPU y 60fps
-    ├── efficiency-auditor.md       # Agente de resiliencia de red, descargas y sesión Google
-    └── bug-hunter.md               # Agente cazador de bugs y aseguramiento de calidad (QA)
 ```
 
 ---
@@ -171,21 +166,6 @@ bash platforms/android/build-apk.sh
 ```
 El archivo instalable se generará en:
 `platforms/android/android/app/build/outputs/apk/debug/app-debug.apk`
-
----
-
-## Agentes Especializados Incluidos en `.agents/`
-
-El proyecto integra tres especificaciones de agentes autónomos en el directorio `.agents/` encargados de mantener la calidad, eficiencia y estabilidad del código:
-
-1. **[`code-optimizer`](.agents/code-optimizer.md) — Especialista en Optimización de Código y Recursos**:
-   - Audita el consumo de RAM (< 80 MB en cliente, < 35 MB en backend) y CPU (< 2% en reproducción en segundo plano).
-   - Garantiza la reutilización del grafo `AudioContext` (10 filtros Biquad + compresor), caché LRU O(1) en la extracción de color `32x32`, actualizaciones O(1) en letras sincronizadas y suspensión automática del `requestAnimationFrame` en pausa o Modo Eco.
-2. **[`efficiency-auditor`](.agents/efficiency-auditor.md) — Auditor de Eficacia Operativa y Resiliencia de Red**:
-   - Supervisa la detección ligera de sesión de Google (`free` vs `premium`) y la activación automática de **AdBlock + SponsorBlock**.
-   - Audita la doble capa de persistencia de playlists (`SQLite WAL` + `LocalStorage`) y el failover multi-cliente (`ANDROID_MUSIC`, `IOS_MUSIC`, `WEB_REMIX`) del gestor de descargas con verificación SHA-256.
-3. **[`bug-hunter`](.agents/bug-hunter.md) — Cazador de Errores y Verificador QA**:
-   - Ejecuta pruebas críticas sobre la transición **Canción (ATV) ↔ Video (OMV)** comprobando que no exista deriva temporal (`0 ms drift`), verifica la recuperación ante caídas abruptas de red a mitad de una playlist y valida el contraste y legibilidad en los **7 temas** y **4 layouts**.
 
 ---
 

@@ -11,6 +11,9 @@ downloads/*.wav
 downloads/*.mp3
 downloads/*.json
 
+# Local agent definitions
+.agents/
+
 # Build artifacts
 build/
 dist/
